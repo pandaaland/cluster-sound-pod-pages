@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="clusterで活動するクリエイター向け。自作音源をワールドクラフトで使えるクラフトアイテムにする企画の紹介。">
+  <title>あなたの曲を、ワールドに置ける音楽へ | clusterクリエイター向け</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #060914;
+      --bg-card: rgba(13, 20, 38, 0.88);
+      --bg-card-hover: rgba(22, 32, 58, 0.95);
+      --border-color: rgba(255, 255, 255, 0.11);
+      --border-accent: rgba(34, 211, 238, 0.35);
+      --primary: #22d3ee;
+      --primary-gradient: linear-gradient(135deg, #22d3ee 0%, #60a5fa 50%, #a78bfa 100%);
+      --accent-cyan: #22d3ee;
+      --accent-blue: #60a5fa;
+      --accent-violet: #a78bfa;
+      --accent-pink: #f472b6;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-red: #fb7185;
+      --text-main: #f8fafc;
+      --text-muted: #a6b2c8;
+      --text-dim: #71809d;
+      --font-heading: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+      --font-body: 'Zen Kaku Gothic New', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { margin: 0; width: 100%; height: 100%; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(34, 211, 238, 0.14) 0%, transparent 40%),
+        radial-gradient(circle at 88% 80%, rgba(167, 139, 250, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.08) 0%, transparent 60%);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.3;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* Top Global Header */
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 90;
+      background: rgba(6, 9, 20, 0.4);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      user-select: none;
+    }
+    .back-to-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .back-to-portal:hover { color: var(--accent-cyan); }
+    .header-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      position: fixed;
+      top: 47px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.06);
+      z-index: 1000;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--primary-gradient);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Deck Container */
+    .deck-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 48px - 64px);
+      margin-top: 48px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      width: 92%;
+      max-width: 1320px;
+      height: 84vh;
+      max-height: 800px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 44px 56px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.96) translateY(20px);
+      transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      z-index: 10;
+    }
+    .slide::-webkit-scrollbar { width: 6px; }
+    .slide::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
+
+    /* Slide Typography & Elements */
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent-cyan);
+      font: 600 0.8rem/1 var(--font-mono);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--font-heading); }
+    h1 { max-width: 980px; margin-bottom: 20px; font-size: clamp(2.4rem, 4.8vw, 4.8rem); line-height: 1.05; letter-spacing: -0.04em; }
+    h2 { margin-bottom: 8px; font-size: clamp(1.8rem, 3.2vw, 3.2rem); line-height: 1.15; letter-spacing: -0.03em; }
+    h3 { margin-bottom: 8px; font-size: 1.15rem; }
+    .gradient-text {
+      background: var(--primary-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .lead { max-width: 880px; color: var(--text-muted); font-size: clamp(1rem, 1.6vw, 1.28rem); line-height: 1.75; }
+    .sub { margin-bottom: 24px; color: var(--text-muted); font-size: 1rem; line-height: 1.65; }
+    .content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .chip { padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 999px; background: rgba(255,255,255,0.04); color: #dbeafe; font-size: 0.86rem; font-weight: 500; }
+    .chip.ok { border-color: rgba(52, 211, 153, 0.36); color: #a7f3d0; background: rgba(52, 211, 153, 0.08); }
+
+    .grid { display: grid; gap: 18px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card { padding: 24px; border: 1px solid var(--border-color); border-radius: 18px; background: rgba(255,255,255,0.035); transition: all 0.3s ease; }
+    .card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+    .card p { margin-bottom: 0; color: var(--text-muted); font-size: 0.92rem; line-height: 1.65; }
+    .card .num { display: block; margin-bottom: 12px; color: var(--accent-cyan); font: 600 0.8rem var(--font-mono); }
+    .card.green { border-color: rgba(52, 211, 153, 0.32); background: rgba(52, 211, 153, 0.055); }
+    .card.red { border-color: rgba(251, 113, 133, 0.32); background: rgba(251, 113, 133, 0.055); }
+    .card.amber { border-color: rgba(251, 191, 36, 0.32); background: rgba(251, 191, 36, 0.055); }
+
+    .statement { padding: 22px 26px; border-left: 3px solid var(--accent-cyan); border-radius: 0 16px 16px 0; background: rgba(34, 211, 238, 0.065); font-size: clamp(1.05rem, 1.8vw, 1.4rem); line-height: 1.65; margin: 12px 0; }
+    .statement strong { color: #a5f3fc; }
+    .warning { margin-top: 14px; padding: 14px 18px; border: 1px solid rgba(251, 191, 36, 0.25); border-left: 3px solid rgba(251, 191, 36, 0.65); border-radius: 12px; background: rgba(251, 191, 36, 0.055); color: #d8c99a; font-size: 0.82rem; font-weight: 500; line-height: 1.65; }
+    .note { margin-top: 16px; color: var(--text-dim); font-size: 0.78rem; line-height: 1.6; }
+
+    .product { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 32px; align-items: center; }
+    .pod-visual { position: relative; min-height: 280px; display: grid; place-items: center; }
+    .pod {
+      width: 200px;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(34, 211, 238, 0.5);
+      border-radius: 42% 58% 52% 48%;
+      background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.2), transparent 10%), linear-gradient(145deg, rgba(34,211,238,0.25), rgba(99,102,241,0.16));
+      box-shadow: 0 0 65px rgba(34,211,238,0.17), inset 0 0 45px rgba(167,139,250,0.12);
+      transform: rotate(-8deg);
+    }
+    .orbit { position: absolute; width: 270px; height: 270px; border: 1px dashed rgba(167,139,250,.35); border-radius: 50%; }
+    .wave {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      height: 54px;
+      padding: 8px 12px;
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      border-radius: 14px;
+      background: rgba(6, 9, 20, 0.72);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.16);
+      backdrop-filter: blur(8px);
+      transform: rotate(8deg);
+    }
+    .wave span {
+      width: 5px;
+      height: 32px;
+      border-radius: 999px;
+      background: linear-gradient(to top, var(--accent-blue), var(--accent-cyan));
+      box-shadow: 0 0 8px rgba(34, 211, 238, 0.45);
+      transform: scaleY(0.25);
+      animation: meter 1.15s ease-in-out infinite alternate;
+    }
+    .wave span:nth-child(2) { animation-delay: -0.75s; animation-duration: 0.9s; }
+    .wave span:nth-child(3) { animation-delay: -0.3s; animation-duration: 1.3s; }
+    .wave span:nth-child(4) { animation-delay: -0.95s; animation-duration: 0.78s; }
+    .wave span:nth-child(5) { animation-delay: -0.5s; animation-duration: 1.05s; }
+    .wave span:nth-child(6) { animation-delay: -0.15s; animation-duration: 0.86s; }
+    .wave span:nth-child(7) { animation-delay: -0.65s; animation-duration: 1.2s; }
+    @keyframes meter {
+      0% { transform: scaleY(0.18); opacity: 0.62; }
+      45% { transform: scaleY(0.9); opacity: 1; }
+      100% { transform: scaleY(0.38); opacity: 0.78; }
+    }
+
+    .checklist { display: grid; gap: 12px; }
+    .check { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 14px; background: rgba(255,255,255,.03); }
+    .check b { color: var(--accent-emerald); font-family: var(--font-mono); font-size: 1.1rem; }
+    .check p { margin: 2px 0 0; color: var(--text-muted); font-size: .88rem; line-height: 1.55; }
+
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; counter-reset: step; }
+    .step { position: relative; min-height: 140px; padding: 18px 14px; border: 1px solid var(--border-color); border-radius: 16px; background: rgba(255,255,255,.035); }
+    .step::before { counter-increment: step; content: '0' counter(step); display: block; margin-bottom: 16px; color: var(--accent-cyan); font: 600 .78rem var(--font-mono); }
+    .step::after { content: '→'; position: absolute; right: -11px; top: 50%; z-index: 2; color: var(--text-dim); }
+    .step:last-child::after { display: none; }
+    .step p { color: var(--text-muted); font-size: .82rem; line-height: 1.5; }
+
+    .tech-line { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .tech-node { flex: 1; padding: 16px 12px; border: 1px solid rgba(96,165,250,.35); border-radius: 14px; background: rgba(96,165,250,.06); text-align: center; font-weight: 700; }
+    .tech-node span { display: block; margin-top: 4px; color: var(--text-muted); font-size: .75rem; font-weight: 500; }
+    .arrow { color: var(--text-dim); font-size: 1.2rem; }
+
+    .cta-box { max-width: 900px; padding: 24px; border: 1px solid rgba(34,211,238,.32); border-radius: 20px; background: linear-gradient(135deg, rgba(34,211,238,.09), rgba(167,139,250,.08)); }
+    .cta-box p { margin-bottom: 0; color: var(--text-muted); line-height: 1.7; }
+
+    /* Bottom Controller UI */
+    .deck-controls {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      background: rgba(6, 9, 20, 0.85);
+      border-top: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      user-select: none;
+    }
+    .control-left, .control-right { display: flex; align-items: center; gap: 14px; }
+    .control-center { display: flex; align-items: center; gap: 16px; }
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .page-indicator {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .page-indicator span { color: #ffffff; }
+
+    .tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tool-btn:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
+    .tool-btn.active { background: rgba(34, 211, 238, 0.2); border-color: var(--accent-cyan); color: #ffffff; }
+
+    /* Speaker Notes Drawer */
+    .speaker-notes-drawer {
+      position: fixed;
+      bottom: 64px;
+      right: 36px;
+      width: 440px;
+      max-height: 300px;
+      background: rgba(13, 20, 38, 0.96);
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      border-radius: 16px;
+      padding: 18px 22px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .speaker-notes-drawer.open { transform: translateY(0); opacity: 1; }
+    .speaker-notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .speaker-notes-body {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      overflow-y: auto;
+      max-height: 200px;
+      padding-right: 6px;
+    }
+    .speaker-notes-body::-webkit-scrollbar { width: 4px; }
+    .speaker-notes-body::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 2px; }
+
+    @media (max-width: 850px) {
+      .top-header { padding: 0 16px; }
+      .slide { width: 95%; height: 80vh; padding: 24px; border-radius: 18px; }
+      .grid.three, .grid.two, .product { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .step { min-height: auto; }
+      .step::after { display: none; }
+      .pod-visual { min-height: 200px; }
+      .pod { width: 140px; }
+      .orbit { width: 190px; height: 190px; }
+      .deck-controls { padding: 0 16px; }
+      .control-right { display: none; }
+      .speaker-notes-drawer { width: 90%; right: 5%; bottom: 70px; }
+    }
+
+    @media print {
+      body { overflow: visible; background: #fff; color: #111827; }
+      body::before, .deck-controls, .top-header, .progress-bar-container, .speaker-notes-drawer { display: none !important; }
+      .deck-container { display: block; height: auto; margin-top: 0; }
+      .slide { position: relative !important; inset: auto; width: 100% !important; max-width: 100% !important; min-height: 100vh !important; margin: 0 !important; border: 0 !important; border-radius: 0 !important; background: #fff !important; box-shadow: none !important; color: #111827 !important; opacity: 1 !important; visibility: visible !important; transform: none !important; page-break-after: always; }
+      .sub, .lead, .card p, .step p, .check p, .cta-box p { color: #475569 !important; }
+      .card, .step, .check { border-color: #cbd5e1 !important; background: #f8fafc !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wave span { animation: none; transform: scaleY(0.55); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header class="top-header">
+    <a href="../index.html" class="back-to-portal">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      ポータル一覧
+    </a>
+    <span class="header-badge">FOR CLUSTER CREATORS</span>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Deck Container -->
+  <main class="deck-container" aria-live="polite">
+
+    <!-- Slide 1: INTRO -->
+    <section class="slide active" data-title="INTRO">
+      <div class="content">
+        <p class="eyebrow">FOR CLUSTER CREATORS</p>
+        <h1>あなたの音源を、<br><span class="gradient-text">クラフトアイテム</span>へ。</h1>
+        <p class="lead">自作音源を、ワールドクラフトで使える長尺再生クラフトアイテムに。clusterで既に創作しているあなたへ、音を「聴くもの」から「空間をつくるもの」へ変える提案です。</p>
+        <div class="chips">
+          <span class="chip">長尺音源対応</span>
+          <span class="chip">ワールドクラフトで設置</span>
+          <span class="chip ok">著作権・原盤権を自己管理する方限定</span>
+        </div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>スライド1の要点:</strong><br>
+        cluster内で活動するクリエイター向けに、自作音源を長尺再生可能なクラフトアイテムへ変換・流通するプロジェクトの導入です。
+      </div>
+    </section>
+
+    <!-- Slide 2: TARGET -->
+    <section class="slide" data-title="TARGET">
+      <div class="content">
+        <p class="eyebrow">01 / WHO THIS IS FOR</p>
+        <h2>この企画が向いている人</h2>
+        <p class="sub">clusterの基本説明は省略します。イベント開催やワールド作成などclusterで活動したことがあり、次の一手を探している方向けです。</p>
+        <div class="grid three">
+          <article class="card"><span class="num">WORLD</span><h3>自分のワールドに<br>オリジナルBGMを置きたい</h3><p>空間のテーマと音楽を、自分の作品として一体化したい。</p></article>
+          <article class="card"><span class="num">CRAFT ITEM</span><h3>ほかの人のワールドでも<br>曲を使ってほしい</h3><p>楽曲を設置可能なアイテムにして、ワールドクリエイターへ届けたい。</p></article>
+          <article class="card"><span class="num">MUSIC × SPACE</span><h3>音楽活動とcluster活動を<br>ひとつにつなげたい</h3><p>作曲、ライブ、ワールド制作の接点になる商品を持ちたい。</p></article>
+        </div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>ターゲット層:</strong><br>
+        すでにclusterで活動経験のあるクリエイターにフォーカス。ワールドの演出向上、アイテムとしての配布・販売、活動の多角化を訴求します。
+      </div>
+    </section>
+
+    <!-- Slide 3: PRODUCT -->
+    <section class="slide" data-title="PRODUCT">
+      <div class="content">
+        <p class="eyebrow">02 / THE PRODUCT</p>
+        <h2>完成するのは、<br>音源を鳴らす<span class="gradient-text">クラフトアイテム</span></h2>
+        <div class="product">
+          <div class="pod-visual" aria-hidden="true"><div class="orbit"></div><div class="pod"><div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div></div>
+          <div>
+            <div class="checklist">
+              <div class="check"><b>✓</b><div><h3>ワールドクラフトで設置</h3><p>購入・入手したクリエイターが、自分のワールドへ配置できます。</p></div></div>
+              <div class="check"><b>✓</b><div><h3>設置すると自動再生</h3><p>操作はシンプル。内部の複雑さを意識させません。</p></div></div>
+              <div class="check"><b>✓</b><div><h3>長尺再生とループ</h3><p>25秒を超える音源をなめらかに再生できます。</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>成果物（プロダクト）の特徴:</strong><br>
+        通常のクラフトアイテム同様にワールドクラフトから配置可能で、25秒以上の長尺再生とシームレスなループ再生を実現します。
+      </div>
+    </section>
+
+    <!-- Slide 4: WHY -->
+    <section class="slide" data-title="WHY">
+      <div class="content">
+        <p class="eyebrow">03 / WHY IT MATTERS</p>
+        <h2>音楽が「背景」ではなく、<br><span class="gradient-text">ワールドの部品</span>になる</h2>
+        <div class="grid three">
+          <article class="card"><span class="num">01</span><h3>作品として残る</h3><p>アイテムが置かれたワールドで楽曲が鳴り続けます。</p></article>
+          <article class="card"><span class="num">02</span><h3>使われ方が広がる</h3><p>展示、カフェ、ゲーム、撮影空間など、作者が想像しなかった文脈と出会えます。</p></article>
+          <article class="card"><span class="num">03</span><h3>収益の入口が増える</h3><p>空間づくりに使うクラフトアイテムとして販売できます。</p></article>
+        </div>
+        <p class="note">※ 出品可否、価格、販売条件、収益分配などは制作・公開前に個別に合意する想定です。</p>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>価値提案:</strong><br>
+        音楽が単なるBGMにとどまらず、空間を構成する「クラフトアイテム」になることで、継続的な露出と新しい収益源を生み出します。
+      </div>
+    </section>
+
+    <!-- Slide 5: TECH -->
+    <section class="slide" data-title="TECH">
+      <div class="content">
+        <p class="eyebrow">04 / UNDER THE HOOD</p>
+        <h2>長い曲を、clusterの制約内で動かす仕組み</h2>
+        <p class="sub">1アイテムに収録できる音声は最大5秒×5個。そこで曲を分割し、複数のアイテムにして統合制御します。</p>
+        <div class="tech-line">
+          <div class="tech-node">音源<span>解析・変換</span></div><div class="arrow">→</div>
+          <div class="tech-node">5秒以下<span>クリップ分割</span></div><div class="arrow">→</div>
+          <div class="tech-node">複数アイテム<span>役割を分担</span></div><div class="arrow">→</div>
+          <div class="tech-node">再生制御<span>同期・ループ</span></div>
+        </div>
+        <div class="statement">使う人には<strong>ひとつのアイテム</strong>。内部では、複数のアイテムを必要なタイミングで生成し、スケジュールに合わせて再生します。</div>
+        <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:12px 18px; border:1px solid rgba(34,211,238,0.25); border-radius:12px; background:rgba(34,211,238,0.04); font-size:0.86rem;">
+          <span style="color:var(--text-muted);">詳しい技術原理や仕組みの解説は note で公開しています</span>
+          <a href="https://note.com/kepanda/n/n55c8d8b9b7be" target="_blank" rel="noopener noreferrer" style="color:var(--accent-cyan); font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            技術解説記事を読む (note) →
+          </a>
+        </div>
+        <div class="warning">制約：現時点では、2人目以降に入室したユーザーの環境において、clusterの仕様上、音飛びや再生位置のずれなどを避けられない場合があります。複数人が同じ品質で聴けることを保証するものではありません。購入・利用前にあらかじめご了承ください。</div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>技術的メカニズムと制約の明示:</strong><br>
+        5秒制約をクリアするための分割・マルチアイテム連携技術。詳しい技術原理は note (https://note.com/kepanda/n/n55c8d8b9b7be) にて公開しています。後から入室したユーザーの同期ズレ等の制約事項も誠実に説明します。
+      </div>
+    </section>
+
+    <!-- Slide 6: RIGHTS -->
+    <section class="slide" data-title="RIGHTS">
+      <div class="content">
+        <p class="eyebrow">05 / ELIGIBILITY</p>
+        <h2>参加条件は、<br><span class="gradient-text">自分で許諾を判断できる音源</span>であること</h2>
+        <div class="grid two">
+          <article class="card green"><span class="num">対象です</span><h3>著作権と原盤権の両方を<br>自分自身が保有・管理</h3><p>作詞・作曲と録音原盤について、cluster向けの複製・加工・アップロード・販売・利用許諾を自分で判断できる音源。</p></article>
+          <article class="card red"><span class="num">対象外です</span><h3>第三者の確認・許諾が必要</h3><p>カバー曲、管理委託曲、共同制作で同意未取得の曲、借用ビートやサンプル、購入素材、生成AIなど権利条件が未確認の音源。</p></article>
+        </div>
+        <p class="note">このスライドは法的助言ではありません。権利関係に不明点がある場合は、応募前に権利者・管理事業者または専門家へ確認してください。</p>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>権利関係の重要条件:</strong><br>
+        著作権・原盤権の両方を自ら保有していること。JASRAC等の管理委託曲や無許諾サンプリング曲は対象外となる点を明確にします。
+      </div>
+    </section>
+
+    <!-- Slide 7: RIGHTS CHECK -->
+    <section class="slide" data-title="RIGHTS CHECK">
+      <div class="content">
+        <p class="eyebrow">06 / RIGHTS CHECK</p>
+        <h2>応募前の4点チェック</h2>
+        <div class="checklist">
+          <div class="check"><b>01</b><div><h3>作詞・作曲</h3><p>自分が権利を保有し、著作権管理事業者や出版社へ管理を委託していない。</p></div></div>
+          <div class="check"><b>02</b><div><h3>録音・演奏・歌唱</h3><p>原盤を自分で保有し、参加者がいる場合はクラフトアイテム化への同意を得ている。</p></div></div>
+          <div class="check"><b>03</b><div><h3>素材・サンプル</h3><p>第三者の音源、ループ、声、生成物を含まない、またはクラフトアイテム化が明確に許諾されている。</p></div></div>
+          <div class="check"><b>04</b><div><h3>公開・販売</h3><p>音源の変換、分割、クラフトアイテムへの収録、アップロード、公開・販売を自分で許諾できる。</p></div></div>
+        </div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>4点セルフチェック:</strong><br>
+        作詞作曲・原盤・サンプル素材・販売許諾の4項目をクリアしているか、確認を促します。
+      </div>
+    </section>
+
+    <!-- Slide 8: WORKFLOW -->
+    <section class="slide" data-title="WORKFLOW">
+      <div class="content">
+        <p class="eyebrow">07 / WORKFLOW</p>
+        <h2>ソフトウェアを使って、<br>自分で音源から公開まで</h2>
+        <p class="sub">すべての技術工程をクリエイター自身が行います。私たちが提供するのは、制作ソフトウェアと操作・トラブル対応のサポートです。</p>
+        <div class="flow">
+          <article class="step"><h3>権利を確認</h3><p>対象条件を自分で確認</p></article>
+          <article class="step"><h3>素材を選択</h3><p>音源とサムネイルを選択</p></article>
+          <article class="step"><h3>アイテム化</h3><p>ソフトウェアで変換・生成</p></article>
+          <article class="step"><h3>実機確認</h3><p>自分の環境で動作を検証</p></article>
+          <article class="step"><h3>商品登録</h3><p>自分のアカウントで登録</p></article>
+        </div>
+        <p class="note">操作方法やエラーで困ったときはサポートします。音源の選定、権利判断、生成、実機確認、アップロードの実行主体はクリエイター本人です。</p>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>制作・公開の流れ:</strong><br>
+        GUIソフトウェアによる自動変換・アイテム生成からストア登録までのステップを説明します。
+      </div>
+    </section>
+
+    <!-- Slide 9: INPUT -->
+    <section class="slide" data-title="INPUT">
+      <div class="content">
+        <p class="eyebrow">08 / WHAT TO PREPARE</p>
+        <h2>用意するものは、<br><span class="gradient-text">たった2つ</span></h2>
+        <div class="grid two">
+          <article class="card"><span class="num">01 / AUDIO</span><h3>音源</h3><p>クラフトアイテム化したい、完成済みの自作音源を用意します。</p></article>
+          <article class="card"><span class="num">02 / THUMBNAIL</span><h3>サムネイル画像</h3><p>クラフトアイテムのサムネイルとして使用する画像を用意します。</p></article>
+        </div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>準備するもの:</strong><br>
+        音源ファイル（WAV/MP3）とサムネイル画像のみ。複雑な3Dモデリング等は不要です。
+      </div>
+    </section>
+
+    <!-- Slide 10: PLAN -->
+    <section class="slide" data-title="PLAN">
+      <div class="content">
+        <p class="eyebrow">09 / CHOOSE YOUR PLAN</p>
+        <h2>活動スタイルに合わせて、<br><span class="gradient-text">2つの方式</span>から選べます</h2>
+        <p class="sub">自分で制作・販売したい方にも、レーベルへ任せたい方にも対応します。</p>
+        <div class="grid two">
+          <article class="card green">
+            <span class="num">SOFTWARE LICENSE</span>
+            <h3>ソフト買い切り</h3>
+            <p style="margin-bottom:6px; color:#f9a8d4; font:700 0.82rem var(--font-body); letter-spacing:0.06em;">今だけの特別価格</p>
+            <p style="margin-bottom:16px; color:#a7f3d0; font:700 clamp(2rem,4vw,3.4rem) var(--font-heading);">3,980円 <span style="font-size:clamp(0.72rem,1.1vw,0.95rem);">（最大30分の初回導入サポート付き）</span></p>
+            <p>ソフトウェアを使い、クリエイター自身でアイテム化・実機確認・商品登録を行います。一度購入すれば、継続して自作音源の制作に利用できます。</p>
+          </article>
+          <article class="card amber">
+            <span class="num">LABEL PARTNERSHIP</span>
+            <h3>レーベル委託方式</h3>
+            <p style="margin-bottom:16px; color:#fde68a; font:700 clamp(2rem,4vw,3.4rem) var(--font-heading);">初期費用なし</p>
+            <p>レーベルへクラフトアイテム化と販売を委託する方式です。販売収益は、事前に合意した条件に基づいて分配します。</p>
+          </article>
+        </div>
+        <p class="note">※ 分配の割合、販売主体、契約期間、サポート範囲などの詳細は、委託開始前に個別に合意します。</p>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>2つのプラン:</strong><br>
+        自分で自由に量産したい方向けの「ソフト買い切り」と、初期費用ゼロで丸投げできる「レーベル委託方式」を提示します。
+      </div>
+    </section>
+
+    <!-- Slide 11: CONTACT -->
+    <section class="slide" data-title="CONTACT">
+      <div class="content">
+        <p class="eyebrow">10 / CONTACT & SUPPORT</p>
+        <h2>導入サポート・ご相談・委託のお申込み</h2>
+        <p class="lead">自作音源のクラフトアイテム化、ソフトウェア導入、レーベル委託など、まずはお気軽にXのDMまでご連絡ください。</p>
+        
+        <div class="cta-box" style="margin-top:20px;">
+          <h3>ご相談時に共有いただくとスムーズな情報</h3>
+          <p style="margin-top:8px; line-height:1.8;">
+            ① 曲名と尺（秒数・分数）<br>
+            ② clusterでの活動名・URL<br>
+            ③ 著作権・原盤権を自分で管理していることの確認<br>
+            ④ ご希望のプラン（ソフト買い切り / レーベル委託 / その他）
+          </p>
+          
+          <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+            <div>
+              <div style="font-weight:700; color:#ffffff; margin-bottom:4px;">お問い合わせ・ご連絡先</div>
+              <div style="color:var(--text-dim); font-size:0.85rem;">公式X: 準備中（個人アカウントにて受付中）</div>
+            </div>
+            <a href="https://x.com/kepa4696" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; color:#ffffff; font-weight:700; text-decoration:none; padding:10px 22px; background:linear-gradient(135deg, rgba(34,211,238,0.25), rgba(96,165,250,0.2)); border:1px solid rgba(34,211,238,0.45); border-radius:10px; transition:all 0.2s ease;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              X (@kepa4696) で相談する →
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note-content" style="display:none;">
+        <strong>ご相談・お申し込み窓口:</strong><br>
+        ソフトの導入サポートや委託のご相談は、X (@kepa4696) のDMにて随時受け付けております。1曲からお気軽にご相談ください。ご清聴ありがとうございました。
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Speaker Notes Drawer -->
+  <aside class="speaker-notes-drawer" id="speakerNotesDrawer">
+    <div class="speaker-notes-header">
+      <span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle; margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        SPEAKER NOTES
+      </span>
+      <span style="font-size:0.75rem; color:var(--text-dim);">[N] で開閉</span>
+    </div>
+    <div class="speaker-notes-body" id="speakerNotesContent"></div>
+  </aside>
+
+  <!-- Bottom Navigation & Controls -->
+  <footer class="deck-controls">
+    <div class="control-left">
+      <button class="tool-btn" id="notesToggleBtn" title="スピーカーノートを表示/非表示 (N)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Notes [N]
+      </button>
+      <button class="tool-btn" id="fullscreenBtn" title="全画面表示 (F)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        Full [F]
+      </button>
+    </div>
+
+    <div class="control-center">
+      <button class="nav-btn" id="prevBtn" title="前のスライド (←)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="page-indicator">
+        <span id="currentPage">01</span> / <span id="totalPages">11</span>
+      </div>
+      <button class="nav-btn" id="nextBtn" title="次のスライド (→ / Space)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <div class="control-right">
+      <span style="font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">[←] [→] [Space] [F] [N]</span>
+    </div>
+  </footer>
+
+  <!-- Script for Navigation -->
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const totalSlides = slides.length;
+    let currentSlideIndex = Math.max(0, Math.min(totalSlides - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+    let notesOpen = false;
+
+    const currentPageEl = document.getElementById('currentPage');
+    const totalPagesEl = document.getElementById('totalPages');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const notesDrawer = document.getElementById('speakerNotesDrawer');
+    const notesContent = document.getElementById('speakerNotesContent');
+    const notesToggleBtn = document.getElementById('notesToggleBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    totalPagesEl.textContent = String(totalSlides).padStart(2, '0');
+
+    function updateSlide(newIndex) {
+      newIndex = (newIndex + totalSlides) % totalSlides;
+      slides[currentSlideIndex].classList.remove('active');
+      currentSlideIndex = newIndex;
+      slides[currentSlideIndex].classList.add('active');
+
+      // Update indicators
+      currentPageEl.textContent = String(currentSlideIndex + 1).padStart(2, '0');
+      const progressPercent = ((currentSlideIndex + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Update Speaker Notes
+      const note = slides[currentSlideIndex].querySelector('.speaker-note-content');
+      notesContent.innerHTML = note ? note.innerHTML : '<p style="color:var(--text-dim);">このスライドにスピーカーノートはありません。</p>';
+
+      // Update URL hash
+      history.replaceState(null, '', `#${currentSlideIndex + 1}`);
+    }
+
+    function prevSlide() { updateSlide(currentSlideIndex - 1); }
+    function nextSlide() { updateSlide(currentSlideIndex + 1); }
+
+    function toggleNotes() {
+      notesOpen = !notesOpen;
+      notesDrawer.classList.toggle('open', notesOpen);
+      notesToggleBtn.classList.toggle('active', notesOpen);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // Event Listeners
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    notesToggleBtn.addEventListener('click', toggleNotes);
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) {
+        e.preventDefault();
+        nextSlide();
+      } else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleNotes();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        updateSlide(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        updateSlide(totalSlides - 1);
+      } else if (e.key === 'Escape' && notesOpen) {
+        toggleNotes();
+      }
+    });
+
+    // Touch Swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX < 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+
+    // Hash change support
+    window.addEventListener('hashchange', () => {
+      const idx = (parseInt(location.hash.slice(1), 10) || 1) - 1;
+      if (idx !== currentSlideIndex && idx >= 0 && idx < totalSlides) {
+        updateSlide(idx);
+      }
+    });
+
+    // Initialize
+    updateSlide(currentSlideIndex);
+  </script>
+</body>
+</html>

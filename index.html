@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cluster Sound Pod Project | プレゼンテーション・導入資料</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0c14;
+      --bg-card: rgba(22, 27, 44, 0.85);
+      --bg-card-hover: rgba(30, 37, 60, 0.95);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --primary: #6366f1;
+      --cluster-cyan: #22d3ee;
+      --dova-orange: #ff7a00;
+      --accent-cyan: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 122, 0, 0.12) 0%, transparent 45%);
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 40%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    .deck-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .deck-grid { grid-template-columns: 1fr; }
+    }
+    .deck-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .deck-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    .deck-card.dova:hover {
+      border-color: rgba(255, 122, 0, 0.4);
+    }
+    .deck-card.cluster:hover {
+      border-color: rgba(34, 211, 238, 0.45);
+    }
+    .tag {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+    }
+    .tag.creator {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .tag.dova {
+      background: rgba(255, 122, 0, 0.15);
+      color: var(--dova-orange);
+      border: 1px solid rgba(255, 122, 0, 0.3);
+    }
+    .tag.cluster {
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--cluster-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    .deck-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #fff;
+    }
+    .deck-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .deck-cta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #818cf8;
+      margin-top: 8px;
+    }
+    .deck-card.dova .deck-cta {
+      color: var(--dova-orange);
+    }
+    .deck-card.cluster .deck-cta {
+      color: var(--cluster-cyan);
+    }
+    .contact-container {
+      margin-top: 40px;
+      padding: 20px 24px;
+      background: rgba(22, 27, 44, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .contact-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .contact-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .contact-badge {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .contact-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .x-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .x-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+    @media (max-width: 600px) {
+      .contact-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .x-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>cluster Sound Pod Project</h1>
+      <p class="lead">メタバース空間に自作曲を届ける、クラフトアイテム流通・制作プロジェクト</p>
+    </header>
+    <div class="deck-grid">
+      <a href="./presentation/cluster-creators.html" class="deck-card cluster">
+        <span class="tag cluster">cluster経験者向け</span>
+        <div class="deck-title">あなたの曲を、ワールドに置ける音楽へ</div>
+        <div class="deck-desc">
+          clusterですでに活動するクリエイター向け。著作権と原盤権を個人の管理下に保有する自作音源を、長尺再生クラフトアイテムにする流れを実務目線で紹介。
+        </div>
+        <div class="deck-cta">スライドを開く →</div>
+      </a>
+      <a href="./presentation/sound-creators.html" class="deck-card">
+        <span class="tag creator">音楽クリエイター向け</span>
+        <div class="deck-title">メタバースで、あなたの音楽を「空間の体験」に変える</div>
+        <div class="deck-desc">
+          一般音楽クリエイター・作曲者様向け。clusterのワールドクラフトストアで自作曲をSound Podとして商品化・販売するビジネスモデルと技術の紹介。
+        </div>
+        <div class="deck-cta">スライドを開く →</div>
+      </a>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="contact-container">
+      <div class="contact-text">
+        <div class="contact-title">
+          <span>お問い合わせ・ご相談</span>
+          <span class="contact-badge">公式X 準備中</span>
+        </div>
+        <div class="contact-sub">プロジェクトや音源のアイテム化に関するご質問・ご相談は、XのDM等へお気軽にどうぞ</div>
+      </div>
+      <a href="https://x.com/kepa4696" target="_blank" rel="noopener noreferrer" class="x-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @kepa4696
+      </a>
+    </div>
+  </div>
+</body>
+</html>

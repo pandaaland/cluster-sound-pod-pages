@@ -1,0 +1,20 @@
+{
+  "name": "cluster-sound-pod-pages",
+  "version": "1.0.0",
+  "description": "GitHub Pages for cluster-sound-pod presentations and documentation",
+  "scripts": {
+    "dev": "browser-sync start --server --files \"**/*.html, **/*.css, **/*.js\" --port 3000 --no-open",
+    "serve": "browser-sync start --server --port 3000 --no-open"
+  },
+  "keywords": [
+    "cluster",
+    "sound-pod",
+    "github-pages",
+    "presentation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^3.0.3"
+  }
+}

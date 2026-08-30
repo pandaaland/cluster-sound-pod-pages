@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メタバースで、あなたの音楽を「空間の体験」に変える | cluster向け音源流通・アイテム商品化のご提案</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0c14;
+      --bg-card: rgba(22, 27, 44, 0.75);
+      --bg-card-hover: rgba(30, 37, 60, 0.9);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(99, 102, 241, 0.3);
+      --primary: #6366f1;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-heading: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+      --font-body: 'Zen Kaku Gothic New', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 60%);
+    }
+
+    /* Top Global Header */
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 90;
+      background: rgba(10, 12, 20, 0.4);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      user-select: none;
+    }
+    .back-to-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .back-to-portal:hover { color: var(--accent-cyan); }
+    .header-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    /* Presentation Wrapper */
+    .deck-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 48px - 64px);
+      margin-top: 48px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      width: 92%;
+      max-width: 1320px;
+      height: 84vh;
+      max-height: 800px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 44px 56px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.96) translateY(20px);
+      transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .slide::-webkit-scrollbar {
+      width: 6px;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      z-index: 10;
+    }
+
+    /* Header in Slide */
+    .slide-header {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .slide-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      margin-bottom: 10px;
+    }
+
+    .slide-title {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .card-highlight {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, rgba(22, 27, 44, 0.8) 100%);
+    }
+
+    .card-highlight-pink {
+      border-color: rgba(236, 72, 153, 0.5);
+      background: linear-gradient(180deg, rgba(236, 72, 153, 0.1) 0%, rgba(22, 27, 44, 0.8) 100%);
+    }
+
+    .card-highlight-cyan {
+      border-color: rgba(6, 182, 212, 0.5);
+      background: linear-gradient(180deg, rgba(6, 182, 212, 0.1) 0%, rgba(22, 27, 44, 0.8) 100%);
+    }
+
+    .card-highlight-emerald {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(22, 27, 44, 0.8) 100%);
+    }
+
+    /* Visual Flows */
+    .flow-horizontal {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 10px 0;
+    }
+
+    .flow-step {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    .flow-step-num {
+      position: absolute;
+      top: -10px;
+      left: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+    }
+
+    .flow-step-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    .flow-step-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .flow-arrow {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Comparison Box */
+    .comparison-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .comp-col {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .comp-col-header {
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .comp-col-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .comp-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-weight: 700;
+    }
+
+    .badge-primary {
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+    }
+
+    .badge-pink {
+      background: rgba(236, 72, 153, 0.2);
+      color: #f472b6;
+      border: 1px solid rgba(236, 72, 153, 0.4);
+    }
+
+    .comp-item {
+      display: flex;
+      gap: 10px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .comp-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Pill Badges / Tags */
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: #cbd5e1;
+    }
+
+    /* Title Slide Special */
+    .title-slide {
+      justify-content: space-between;
+      background: radial-gradient(circle at 70% 30%, rgba(99, 102, 241, 0.25) 0%, transparent 60%),
+                  radial-gradient(circle at 20% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 50%),
+                  var(--bg-card);
+    }
+
+    .title-hero {
+      margin-top: 40px;
+    }
+
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #c7d2fe;
+      margin-bottom: 20px;
+    }
+
+    .title-main {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 70%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .title-sub {
+      font-size: 1.35rem;
+      color: #cbd5e1;
+      font-weight: 500;
+      max-width: 800px;
+      line-height: 1.5;
+    }
+
+    .title-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .title-author {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .title-brand {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.2rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Alert Boxes */
+    .alert-box {
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .alert-box.primary {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #e0e7ff;
+    }
+
+    .alert-box.emerald {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #d1fae5;
+    }
+
+    .alert-box.amber {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fef3c7;
+    }
+
+    /* CTA Section */
+    .cta-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-decoration: none;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.7);
+    }
+
+    /* Bottom Controller UI */
+    .deck-controls {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      background: rgba(10, 12, 20, 0.8);
+      border-top: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      user-select: none;
+    }
+
+    .control-left, .control-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .control-center {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .page-indicator span {
+      color: #ffffff;
+    }
+
+    .progress-bar-container {
+      position: fixed;
+      top: 47px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.06);
+      z-index: 1000;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary-gradient);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Speaker Notes Drawer */
+    .speaker-notes-drawer {
+      position: fixed;
+      bottom: 64px;
+      right: 36px;
+      width: 440px;
+      max-height: 300px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 16px;
+      padding: 18px 22px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .speaker-notes-drawer.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .speaker-notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #818cf8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .speaker-notes-body {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+      overflow-y: auto;
+      max-height: 200px;
+      padding-right: 6px;
+    }
+
+    .speaker-notes-body::-webkit-scrollbar {
+      width: 4px;
+    }
+    .speaker-notes-body::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+
+    .tool-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover, .tool-btn.active {
+      background: rgba(99, 102, 241, 0.2);
+      color: #fff;
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    @media (max-width: 850px) {
+      .top-header { padding: 0 16px; }
+      .slide { width: 95%; height: 80vh; padding: 24px; border-radius: 18px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .deck-controls { padding: 0 16px; }
+      .control-right { display: none; }
+      .speaker-notes-drawer { width: 90%; right: 5%; bottom: 70px; }
+    }
+
+    /* Print / PDF Styles */
+    @media print {
+      body {
+        overflow: visible;
+        height: auto;
+        background: #0a0c14 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .deck-controls, .top-header, .progress-bar-container, .speaker-notes-drawer {
+        display: none !important;
+      }
+      .deck-container {
+        display: block;
+        height: auto;
+        margin-top: 0;
+      }
+      .slide {
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        page-break-after: always;
+        border-radius: 0 !important;
+        border: none !important;
+        margin: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header class="top-header">
+    <a href="../index.html" class="back-to-portal">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      ポータル一覧
+    </a>
+    <span class="header-badge">FOR SOUND CREATORS</span>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Deck Container -->
+  <main class="deck-container">
+
+    <!-- ==================== SLIDE 1: Title ==================== -->
+    <section class="slide active title-slide" data-slide="1">
+      <div class="title-hero">
+        <div class="title-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          cluster向け 音源流通・アイテム商品化のご提案
+        </div>
+        <h1 class="title-main">メタバースで、あなたの音楽を<br>「空間の体験」に変える</h1>
+        <p class="title-sub">音源を預けるだけで、cluster内で設置・再生できるクラフトアイテムへ商品化。権利を守りながら、新しい収益とファン体験を創出します。</p>
+      </div>
+
+      <div class="title-footer">
+        <div class="title-author">
+          <div>対象: 音楽クリエイター（作詞・作曲 / ボカロP / DTMer / アーティスト）</div>
+          <div style="font-size: 0.85rem; margin-top: 4px; color: var(--text-dim);">メタバース音源流通・販売支援事業 企画書</div>
+        </div>
+        <div class="title-brand">cluster-sound-pod</div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        本日はお時間をいただきありがとうございます。本日は、皆様が制作された素晴らしい楽曲を、国内最大級のメタバースプラットフォーム『cluster』の中で、ユーザーが購入・設置して楽しめる「クラフトアイテム」として商品化・流通させる取り組みについてご紹介します。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 2: Background & Opportunity ==================== -->
+    <section class="slide" data-slide="2">
+      <header class="slide-header">
+        <div class="slide-category">Why Metaverse?</div>
+        <h2 class="slide-title">なぜ今、メタバース（cluster）なのか？</h2>
+        <p class="slide-subtitle">音楽の「新しい聴かれ方」と「収益機会」が空間上で急拡大しています</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-highlight">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <h3 class="card-title">「空間で体験する」音楽</h3>
+            <p class="card-desc">リスナーがイヤホンで聴くだけでなく、ワールドのBGM、店舗の演出、バーチャルイベントの空気感をつくる「空間の主役」として音楽が求められています。</p>
+          </div>
+
+          <div class="card card-highlight-pink">
+            <div class="card-icon" style="background:rgba(236,72,153,0.15); color:#f472b6;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+            </div>
+            <h3 class="card-title">新しい経済圏でのマネタイズ</h3>
+            <p class="card-desc">サブスクの0.1円単位の再生報酬とは異なり、「空間を彩る音響インテリア」としてワールド制作者が買い切るアイテム販売モデルが成立します。</p>
+          </div>
+
+          <div class="card card-highlight-cyan">
+            <div class="card-icon" style="background:rgba(6,182,212,0.15); color:#22d3ee;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <h3 class="card-title">熱量の高いコミュニティ</h3>
+            <p class="card-desc">来場者が滞在するワールドに常時BGMとして流れることで、曲と作者名が自然に認知され、メタバース発の熱心なファン層を獲得できます。</p>
+          </div>
+        </div>
+
+        <div class="alert-box primary">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <div>
+            <strong>ワールド制作者・イベント主催者の強い声：</strong>
+            「自分のワールドにマッチした高品質なオリジナル曲を置きたい」「商用や配信で安心して流せる音楽アイテムが欲しい」という需要が着実に存在します。
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        現在、clusterをはじめとするメタバースでは日々無数のワールドやイベントが作られています。そこでは常に「クオリティの高いBGMを流したい」という需要があります。従来のサブスク配信やCD販売に加え、メタバース内の「音響アイテム」として楽曲を届けることで、新たなファン獲得と収益源を作ることができます。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 3: The Technical Challenge ==================== -->
+    <section class="slide" data-slide="3">
+      <header class="slide-header">
+        <div class="slide-category" style="background:rgba(245,158,11,0.15); color:#fcd34d; border-color:rgba(245,158,11,0.3);">Technical Challenges</div>
+        <h2 class="slide-title">メタバースで曲を流す「技術の壁」</h2>
+        <p class="slide-subtitle">単に音楽ファイルを置くだけでは解決できない、空間特有の複合的な課題が存在します</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="grid-4">
+          <div class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+            <div class="card-icon" style="background:rgba(239,68,68,0.15); color:#f87171;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <h3 class="card-title" style="color:#fca5a5;">プラットフォーム制約</h3>
+            <p class="card-desc">通常の音楽配信とは異なり、空間アセットとしての容量や音声仕様など、プラットフォーム特有の厳格な制限が存在します。</p>
+          </div>
+
+          <div class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+            <div class="card-icon" style="background:rgba(239,68,68,0.15); color:#f87171;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <h3 class="card-title" style="color:#fca5a5;">長尺再生・ループ制御</h3>
+            <p class="card-desc">1曲まるごとズレずに安定再生し、自然にループさせ続けるには、高度な同期・制御プログラミングが必要です。</p>
+          </div>
+
+          <div class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+            <div class="card-icon" style="background:rgba(239,68,68,0.15); color:#f87171;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            </div>
+            <h3 class="card-title" style="color:#fca5a5;">ワールド負荷の最適化</h3>
+            <p class="card-desc">展示やアバターの体験を邪魔しないよう、空間の描画や通信リソースを圧迫しない綿密な軽量化設計が不可欠です。</p>
+          </div>
+
+          <div class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+            <div class="card-icon" style="background:rgba(239,68,68,0.15); color:#f87171;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            </div>
+            <h3 class="card-title" style="color:#fca5a5;">制作・運用の継続工数</h3>
+            <p class="card-desc">実機検証や登録作業に加え、プラットフォームの進化・仕様変更への追従など、公開後も継続的な保守が求められます。</p>
+          </div>
+        </div>
+
+        <div class="alert-box amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <div>
+            <strong>創作活動とは異なる「空間技術・最適化・運用」の複合的な壁：</strong>
+            楽曲制作に100%集中したいクリエイターにとって、メタバース固有の技術仕様や継続的な保守は大きな参入障壁となっています。
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        メタバース空間で楽曲を快適に流すためには、単に音声ファイルをアップロードするだけでは済まず、プラットフォーム固有の制約、ズレのない再生制御、ワールドを重くしない最適化、そして仕様変更への継続的な対応など、空間特有の様々な技術課題が存在します。これらをクリエイター個人がすべて解決するのは大きな負担となっています。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 4: Our Solution ==================== -->
+    <section class="slide" data-slide="4">
+      <header class="slide-header">
+        <div class="slide-category">Our Solution</div>
+        <h2 class="slide-title">私たちのソリューション</h2>
+        <p class="slide-subtitle">音源を渡すだけ。技術的な変換・制作・運用はすべてお任せください</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="flow-horizontal">
+          <div class="flow-step" style="border-color: var(--accent-pink);">
+            <div class="flow-step-num" style="background: var(--accent-pink);">YOU</div>
+            <div class="flow-step-title" style="color:#f472b6;">音源データの提出</div>
+            <div class="flow-step-desc">完成音源（WAV/MP3）と簡単な権利申告を送るだけ</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" style="border-color: var(--primary);">
+            <div class="flow-step-num">TECH</div>
+            <div class="flow-step-title" style="color:#a5b4fc;">自動変換・スクリプト化</div>
+            <div class="flow-step-desc">音圧最適化・分割・オンデマンド同期Pod自動構築</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" style="border-color: var(--accent-cyan);">
+            <div class="flow-step-num">QA</div>
+            <div class="flow-step-title" style="color:#22d3ee;">実機検証・アイテム登録</div>
+            <div class="flow-step-desc">cluster実機での音質・ループテスト＆ストア出品代行</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step" style="border-color: var(--accent-emerald);">
+            <div class="flow-step-num">GOAL</div>
+            <div class="flow-step-title" style="color:#34d399;">cluster内で販売開始</div>
+            <div class="flow-step-desc">置くだけで鳴る高品質音響アイテムがリリース！</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 10px;">
+          <div class="card">
+            <h3 class="card-title" style="color:#818cf8;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              独自技術: cluster-sound-pod
+            </h3>
+            <p class="card-desc">
+              絶対時刻スケジューリングにより、区間やループ間の「ズレ」を徹底排除。さらに出番が来たアイテムのみをオンデマンド生成することで、ワールドの容量を消費しません。
+            </p>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title" style="color:#34d399;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              永続的な保守＆アップデート
+            </h3>
+            <p class="card-desc">
+              clusterのAPIやシステム仕様が将来アップデートされても、当方が責任を持ってアイテムを改修・保守。クリエイターがメンテナンスに追われる心配はありません。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        そこで私たちが提供するのが、この変換・制作・運用の完全サポートです。クリエイターの皆様は、完成した音源ファイルをご用意いただくだけです。分割処理、同期スクリプトの組み込み、オンデマンド制御、アップロード、実機テスト、そして将来のclusterの仕様変更対応まで、すべての技術的・運用的タスクを私たちが引き受けます。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 5: Product Experience ==================== -->
+    <section class="slide" data-slide="5">
+      <header class="slide-header">
+        <div class="slide-category">User Experience</div>
+        <h2 class="slide-title">どんな商品になるのか？（購入者視点）</h2>
+        <p class="slide-subtitle">ワールド制作者が「買いたくなる」洗練されたユーザー体験</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card card-highlight-cyan" style="justify-content: center;">
+            <div style="background: rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:24px; text-align:center;">
+              <div style="font-size: 3rem; margin-bottom: 8px;">📻 ✨</div>
+              <div style="font-weight: 800; font-size: 1.2rem; margin-bottom: 4px; color:#fff;">洗練された音響クラフトアイテム</div>
+              <div style="font-size: 0.88rem; color:#94a3b8;">ジュークボックス / レコード / スピーカー etc.</div>
+
+              <div style="display:flex; justify-content:center; gap:8px; margin-top:16px;">
+                <span class="tag" style="background:rgba(6,182,212,0.2); border-color:rgba(6,182,212,0.4); color:#67e8f9;">置くだけで動作</span>
+                <span class="tag" style="background:rgba(99,102,241,0.2); border-color:rgba(99,102,241,0.4); color:#c7d2fe;">触って再生/停止</span>
+                <span class="tag" style="background:rgba(16,185,129,0.2); border-color:rgba(16,185,129,0.4); color:#6ee7b7;">シームレスループ</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="card" style="padding:16px;">
+              <h4 class="card-title" style="font-size:1.02rem; color:#fff;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                ワンクリックでワールドに設置
+              </h4>
+              <p class="card-desc" style="font-size:0.86rem;">ワールドクラフトのインベントリから置くだけ。複雑な設定やスクリプト入力は一切不要です。</p>
+            </div>
+
+            <div class="card" style="padding:16px;">
+              <h4 class="card-title" style="font-size:1.02rem; color:#fff;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                長尺フルコーラス＆自然なループ
+              </h4>
+              <p class="card-desc" style="font-size:0.86rem;">3〜5分以上の楽曲でも最後まで高音質で再生され、曲末から自動で自然に先頭へループします。</p>
+            </div>
+
+            <div class="card" style="padding:16px;">
+              <h4 class="card-title" style="font-size:1.02rem; color:#fff;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                軽量でワールドに優しい親切設計
+              </h4>
+              <p class="card-desc" style="font-size:0.86rem;">ワールドの容量制限を圧迫しないため、他の家具や装飾を邪魔せず、制作者に喜ばれます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        完成したアイテムは、購入者から見ると「ワールドにポンと置くだけで、ずっと心地よく曲がループ再生されるスピーカー」として機能します。裏側では複数のアイテムが入れ替わりながら動いていますが、購入者は難しい操作を一切する必要がありません。そのため、多くのワールド制作者に安心して手に取ってもらえます。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 6: Benefits for Creators ==================== -->
+    <section class="slide" data-slide="6">
+      <header class="slide-header">
+        <div class="slide-category">Creator Benefits</div>
+        <h2 class="slide-title">クリエイターにとっての3大メリット</h2>
+        <p class="slide-subtitle">制作に専念しながら、ファンと収益を大きく広げる</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-highlight">
+            <div style="font-size: 2.2rem; font-weight:900; color:#818cf8; margin-bottom:8px; font-family:var(--font-mono);">01</div>
+            <h3 class="card-title">技術負担ゼロで進出</h3>
+            <p class="card-desc">
+              ClusterScript、Unity、3Dモデル設定などの専門知識は一切不要。音楽の創作活動に100%集中したまま、メタバース市場へ進出できます。
+            </p>
+            <div class="tag-list">
+              <span class="tag">音源渡すだけ</span>
+              <span class="tag">スクリプト不要</span>
+            </div>
+          </div>
+
+          <div class="card card-highlight-pink">
+            <div style="font-size: 2.2rem; font-weight:900; color:#f472b6; margin-bottom:8px; font-family:var(--font-mono);">02</div>
+            <h3 class="card-title">アイテム販売の直接収益</h3>
+            <p class="card-desc">
+              「ワールド必須の音響設備」として値付けができるため、再生数依存のストリーミングとは異なる高単価な収益の柱を構築できます。
+            </p>
+            <div class="tag-list">
+              <span class="tag">新マネタイズ</span>
+              <span class="tag">レベニューシェア</span>
+            </div>
+          </div>
+
+          <div class="card card-highlight-cyan">
+            <div style="font-size: 2.2rem; font-weight:900; color:#22d3ee; margin-bottom:8px; font-family:var(--font-mono);">03</div>
+            <h3 class="card-title">空間を通じた認知拡大</h3>
+            <p class="card-desc">
+              人気ワールドやイベントにBGMとして常設されることで、何千人ものユーザーが滞在中に曲を体験し、自然なプロモーションにつながります。
+            </p>
+            <div class="tag-list">
+              <span class="tag">常時リスニング</span>
+              <span class="tag">ファン獲得</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        参加いただくメリットは大きく3つあります。1つ目は、技術的負担がゼロであること。2つ目は、アイテム販売による新しい収益が得られること。そして3つ目は、メタバースならではの強力なプロモーション効果です。誰かのワールドのお気に入りBGMになることで、何千人もの来場者に毎日あなたの音楽が届きます。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 7: Rights & Safety ==================== -->
+    <section class="slide" data-slide="7">
+      <header class="slide-header">
+        <div class="slide-category" style="background:rgba(16,185,129,0.15); color:#6ee7b7; border-color:rgba(16,185,129,0.3);">Rights & Safety</div>
+        <h2 class="slide-title">安心の権利設計（クリエイターファースト）</h2>
+        <p class="slide-subtitle">あなたの楽曲の権利は、100%あなたの手元に残ります</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="alert-box emerald" style="font-size: 1.05rem; padding: 20px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <div>
+            <strong>権利の譲渡・独占は一切ありません</strong><br>
+            当事業者は、楽曲の著作権や原盤権を取得しません。権利はすべてクリエイター（または原権利者）に留保されます。
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top: 10px;">
+          <div class="card">
+            <h4 class="card-title" style="color:#34d399;">非独占的利用許諾</h4>
+            <p class="card-desc">cluster向けに「アイテム化・販売・宣伝・保守」を行うために最低限必要な利用許諾のみをお預かりします。</p>
+          </div>
+
+          <div class="card">
+            <h4 class="card-title" style="color:#34d399;">他サービスでの自由な展開</h4>
+            <p class="card-desc">YouTube、Spotify、Apple Music、BOOTH、CD販売など、他の媒体での配信や販売はこれまで通り完全自由です。</p>
+          </div>
+
+          <div class="card">
+            <h4 class="card-title" style="color:#34d399;">透明な契約と権利保護</h4>
+            <p class="card-desc">自作音源の権利関係を丁寧に確認し、購入者に対しても音源の無断抽出や再配布を禁止する規約を明示します。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        最も大切にしているのが権利の保護です。私たちは従来のレーベルのように著作権や原盤権を譲渡いただくことはありません。権利はすべてクリエイターの皆様のお手元に残ります。お願いするのは「cluster向けにアイテム化して販売・保守すること」に対する非独占の利用許諾のみです。他のストリーミングやダウンロード販売も今まで通り自由に行っていただけます。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 8: Business Models ==================== -->
+    <section class="slide" data-slide="8">
+      <header class="slide-header">
+        <div class="slide-category">Business Models</div>
+        <h2 class="slide-title">選べる2つの販売モデル</h2>
+        <p class="slide-subtitle">ご自身の活動方針やブランド戦略に合わせて選択可能です</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="comparison-container">
+          <!-- Model A -->
+          <div class="comp-col card-highlight">
+            <div class="comp-col-header">
+              <div>
+                <div style="font-size:0.8rem; color:#818cf8; font-weight:700;">モデル A</div>
+                <div class="comp-col-title">配信用アカウント代理販売型</div>
+              </div>
+              <span class="comp-badge badge-primary">おまかせ運用</span>
+            </div>
+
+            <div class="comp-item">
+              <span class="comp-icon" style="color:#818cf8;">●</span>
+              <div><strong>販売主体:</strong> 当レーベルの公式アカウントから販売</div>
+            </div>
+            <div class="comp-item">
+              <span class="comp-icon" style="color:#818cf8;">●</span>
+              <div><strong>作業負担:</strong> 登録・商品説明・宣伝・顧客対応まで全自動</div>
+            </div>
+            <div class="comp-item">
+              <span class="comp-icon" style="color:#818cf8;">●</span>
+              <div><strong>収益形態:</strong> アイテム売上に応じたレベニューシェア（売上分配）</div>
+            </div>
+
+            <div style="margin-top:auto; padding-top:12px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.85rem; color:#cbd5e1;">
+              👉 <strong>こんな方に:</strong> 面倒な運用を丸投げし、レーベルの集客力を活かしたい方
+            </div>
+          </div>
+
+          <!-- Model B -->
+          <div class="comp-col card-highlight-pink">
+            <div class="comp-col-header">
+              <div>
+                <div style="font-size:0.8rem; color:#f472b6; font-weight:700;">モデル B</div>
+                <div class="comp-col-title">クリエイター本人販売支援型</div>
+              </div>
+              <span class="comp-badge badge-pink">自身のブランドで出品</span>
+            </div>
+
+            <div class="comp-item">
+              <span class="comp-icon" style="color:#f472b6;">●</span>
+              <div><strong>販売主体:</strong> クリエイターご本人のclusterアカウント</div>
+            </div>
+            <div class="comp-item">
+              <span class="comp-icon" style="color:#f472b6;">●</span>
+              <div><strong>作業負担:</strong> アイテム構築・技術サポートを当方が受託</div>
+            </div>
+            <div class="comp-item">
+              <span class="comp-icon" style="color:#f472b6;">●</span>
+              <div><strong>収益形態:</strong> clusterから売上を直接受領（制作費/保守費の受託型）</div>
+            </div>
+
+            <div style="margin-top:auto; padding-top:12px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.85rem; color:#cbd5e1;">
+              👉 <strong>こんな方に:</strong> ご自身のショップやブランド名義で直接販売したい方
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        販売形態は2種類ご用意しています。モデルAは「代理販売型」で、レーベルのアカウントから出品し、宣伝や売上管理を含めてすべてお任せいただく形態です。モデルBは「本人販売支援型」で、ご自身のclusterアカウントから出品したい方向けに、制作・技術面を裏方としてサポートする形態です。ご自身の活動スタンスに合わせてお選びいただけます。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 9: Workflow ==================== -->
+    <section class="slide" data-slide="9">
+      <header class="slide-header">
+        <div class="slide-category">Workflow</div>
+        <h2 class="slide-title">リリースまでのカンタンな流れ</h2>
+        <p class="slide-subtitle">シンプルな4ステップで、あなたの音楽がメタバースへ</p>
+      </header>
+
+      <div class="slide-body">
+        <div class="grid-4">
+          <div class="card" style="border-top: 4px solid #6366f1;">
+            <div style="font-size:0.8rem; font-weight:800; color:#818cf8; font-family:var(--font-mono); margin-bottom:6px;">STEP 01</div>
+            <h3 class="card-title" style="font-size:1.05rem;">音源のご提出</h3>
+            <p class="card-desc">完成音源（WAV/MP3）と、権利に関する簡単な確認フォームをご提出いただきます。</p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid #a855f7;">
+            <div style="font-size:0.8rem; font-weight:800; color:#c084fc; font-family:var(--font-mono); margin-bottom:6px;">STEP 02</div>
+            <h3 class="card-title" style="font-size:1.05rem;">アイテム化・実機検証</h3>
+            <p class="card-desc">当方にて音響最適化、分割、スクリプト組み込みを行い、cluster実機で動作確認を実施。</p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid #ec4899;">
+            <div style="font-size:0.8rem; font-weight:800; color:#f472b6; font-family:var(--font-mono); margin-bottom:6px;">STEP 03</div>
+            <h3 class="card-title" style="font-size:1.05rem;">プレビュー確認</h3>
+            <p class="card-desc">テストワールドで実際の聞こえ方をご確認いただき、商品ページ（説明文・画像）を最終確認。</p>
+          </div>
+
+          <div class="card" style="border-top: 4px solid #10b981;">
+            <div style="font-size:0.8rem; font-weight:800; color:#34d399; font-family:var(--font-mono); margin-bottom:6px;">STEP 04</div>
+            <h3 class="card-title" style="font-size:1.05rem;">販売開始・プロモ</h3>
+            <p class="card-desc">ストア公開と同時に、SNSやメタバース空間内での宣伝活動を一斉にスタートします！</p>
+          </div>
+        </div>
+
+        <div class="alert-box primary" style="margin-top:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          <div>
+            <strong>スピーディーな制作サイクル：</strong>
+            音源受領から最短数日〜1週間程度で実機テスト・出品まで完了できます。
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        リリースの流れは非常にシンプルです。まずは音源をお送りいただき、簡単な権利確認を行います。その後、私たちがアイテム化と動作検証を行い、完成したアイテムと商品ページをご確認いただきます。OKをいただければストアへ出品し、販売とプロモーションをスタートします。
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 10: Call to Action ==================== -->
+    <section class="slide" data-slide="10">
+      <header class="slide-header" style="text-align: center;">
+        <div class="slide-category" style="margin: 0 auto 10px auto;">Next Steps</div>
+        <h2 class="slide-title" style="font-size:2.5rem;">まずは1曲、お試しで作ってみませんか？</h2>
+        <p class="slide-subtitle">あなたの楽曲がメタバース空間で鳴り響く感動を、ぜひ体験してください</p>
+      </header>
+
+      <div class="slide-body" style="align-items: center;">
+        <div class="cta-card" style="width: 100%; max-width: 820px;">
+          <h3 style="font-size: 1.4rem; color:#ffffff; font-weight: 800;">
+            実際の動作を確認できるデモワールド公開中
+          </h3>
+          <p style="color: #cbd5e1; font-size: 0.95rem; max-width: 600px; line-height: 1.6;">
+            本仕組みで構築されたクラフトアイテムを、実際のclusterワールドで視聴・操作いただけます。
+          </p>
+
+          <div style="display:flex; gap:16px; margin: 10px 0;">
+            <a href="https://cluster.mu/w/51350402-8374-4a7d-9f33-9ade1808d8e4" target="_blank" class="cta-button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+              clusterでデモワールドを体験する
+            </a>
+          </div>
+
+          <div style="display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:24px; font-size:0.9rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; width:100%;">
+            <div>🐦 <strong>公式X:</strong> 準備中</div>
+            <div>💬 <strong>お問合せ (X):</strong> <a href="https://x.com/kepa4696" target="_blank" rel="noopener noreferrer" style="color:var(--accent-cyan); font-weight:700; text-decoration:underline;">@kepa4696</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-note-content" style="display:none;">
+        まずは、皆様の楽曲が実際にclusterの中でどう鳴るのか、テストワールドでご体験いただくところからスタートできればと考えております。1曲から気軽にお試しいただけますので、ご興味を持っていただけましたら、ぜひお気軽にお声がけください。ご清聴ありがとうございました。
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Speaker Notes Drawer -->
+  <aside class="speaker-notes-drawer" id="speakerNotesDrawer">
+    <div class="speaker-notes-header">
+      <span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline; vertical-align:middle;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        トークスクリプト (Speaker Notes)
+      </span>
+      <span style="font-size:0.75rem; color:var(--text-dim);">[N] で開閉</span>
+    </div>
+    <div class="speaker-notes-body" id="speakerNotesContent"></div>
+  </aside>
+
+  <!-- Bottom Navigation & Controls -->
+  <footer class="deck-controls">
+    <div class="control-left">
+      <button class="tool-btn" id="notesToggleBtn" title="スピーカーノートを表示/非表示 (N)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Notes [N]
+      </button>
+      <button class="tool-btn" id="fullscreenBtn" title="全画面表示 (F)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        Full [F]
+      </button>
+    </div>
+
+    <div class="control-center">
+      <button class="nav-btn" id="prevBtn" title="前のスライド (←)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="page-indicator">
+        <span id="currentPage">01</span> / <span id="totalPages">10</span>
+      </div>
+      <button class="nav-btn" id="nextBtn" title="次のスライド (→ / Space)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <div class="control-right">
+      <span style="font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">[←] [→] [Space] [F] [N]</span>
+    </div>
+  </footer>
+
+  <!-- Script for Navigation -->
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const totalSlides = slides.length;
+    let currentSlideIndex = Math.max(0, Math.min(totalSlides - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+    let notesOpen = false;
+
+    const currentPageEl = document.getElementById('currentPage');
+    const totalPagesEl = document.getElementById('totalPages');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const notesDrawer = document.getElementById('speakerNotesDrawer');
+    const notesContent = document.getElementById('speakerNotesContent');
+    const notesToggleBtn = document.getElementById('notesToggleBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    totalPagesEl.textContent = String(totalSlides).padStart(2, '0');
+
+    function updateSlide(newIndex) {
+      newIndex = (newIndex + totalSlides) % totalSlides;
+      slides[currentSlideIndex].classList.remove('active');
+      currentSlideIndex = newIndex;
+      slides[currentSlideIndex].classList.add('active');
+
+      // Update indicators
+      currentPageEl.textContent = String(currentSlideIndex + 1).padStart(2, '0');
+      const progressPercent = ((currentSlideIndex + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Update Speaker Notes
+      const note = slides[currentSlideIndex].querySelector('.speaker-note-content');
+      notesContent.innerHTML = note ? note.innerHTML : '<p style="color:var(--text-dim);">このスライドにスピーカーノートはありません。</p>';
+
+      // Update URL hash
+      history.replaceState(null, '', `#${currentSlideIndex + 1}`);
+    }
+
+    function prevSlide() { updateSlide(currentSlideIndex - 1); }
+    function nextSlide() { updateSlide(currentSlideIndex + 1); }
+
+    function toggleNotes() {
+      notesOpen = !notesOpen;
+      notesDrawer.classList.toggle('open', notesOpen);
+      notesToggleBtn.classList.toggle('active', notesOpen);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // Event Listeners
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    notesToggleBtn.addEventListener('click', toggleNotes);
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) {
+        e.preventDefault();
+        nextSlide();
+      } else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleNotes();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        updateSlide(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        updateSlide(totalSlides - 1);
+      } else if (e.key === 'Escape' && notesOpen) {
+        toggleNotes();
+      }
+    });
+
+    // Touch Swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX < 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+
+    // Hash change support
+    window.addEventListener('hashchange', () => {
+      const idx = (parseInt(location.hash.slice(1), 10) || 1) - 1;
+      if (idx !== currentSlideIndex && idx >= 0 && idx < totalSlides) {
+        updateSlide(idx);
+      }
+    });
+
+    // Initialize
+    updateSlide(currentSlideIndex);
+  </script>
+</body>
+</html>
