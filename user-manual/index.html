@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cluster Sound Album - ユーザーマニュアル</title>
+  <style>
+    :root {
+      --ink: #152033;
+      --muted: #5c667a;
+      --line: #d9e0eb;
+      --paper: #fff;
+      --soft: #f4f7fb;
+      --blue: #4867f3;
+      --purple: #8c5de8;
+      --cyan: #1cb5c9;
+      --warn: #fff4d8;
+      --warn-line: #e6ae2f;
+      --safe: #eaf9f5;
+      --safe-line: #23a886;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: #e8edf5; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+      font-size: 10.3pt;
+      line-height: 1.65;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      position: relative;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 10mm auto;
+      padding: 14mm 16mm 14mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 8px 30px rgb(26 39 68 / 12%);
+      page-break-after: always;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .page::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4mm;
+      content: "";
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8mm;
+      margin-bottom: 6mm;
+      padding-bottom: 4mm;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 1mm;
+      color: var(--blue);
+      font-size: 8pt;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 0;
+      font-size: 22pt;
+      line-height: 1.25;
+      letter-spacing: -.02em;
+    }
+
+    header .meta {
+      flex: 0 0 auto;
+      margin: 0;
+      color: var(--muted);
+      font-size: 8.5pt;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .lead {
+      margin: -1mm 0 5mm;
+      color: var(--muted);
+      font-size: 10.5pt;
+    }
+
+    .note {
+      margin-bottom: 5mm;
+      padding: 3mm 4mm;
+      border-left: 1.2mm solid var(--warn-line);
+      border-radius: 2mm;
+      background: var(--warn);
+      font-size: 9pt;
+    }
+
+    .note.safe {
+      border-left-color: var(--safe-line);
+      background: var(--safe);
+    }
+
+    .steps {
+      display: grid;
+      gap: 5mm;
+    }
+
+    .step {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .step-heading {
+      display: grid;
+      grid-template-columns: 11mm 1fr;
+      align-items: start;
+      gap: 3mm;
+      margin-bottom: 2.5mm;
+    }
+
+    .step-no {
+      display: grid;
+      width: 10mm;
+      height: 10mm;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      font-size: 12pt;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: -.5mm 0 .5mm;
+      font-size: 14pt;
+      line-height: 1.4;
+    }
+
+    .instruction { margin: 0; color: var(--muted); }
+
+    figure {
+      margin: 0;
+      padding: 2.5mm;
+      border: 1px solid var(--line);
+      border-radius: 3mm;
+      background: var(--soft);
+      text-align: center;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      max-height: 78mm;
+      object-fit: contain;
+      margin: auto;
+      border-radius: 1.5mm;
+    }
+
+    figure.portrait img { max-height: 82mm; }
+    figure.hero img { max-height: 175mm; }
+
+    .intro header { margin-bottom: 4mm; }
+    .intro .lead { margin-bottom: 3mm; }
+    .intro .note { margin-bottom: 3mm; padding-top: 2mm; padding-bottom: 2mm; }
+    .intro .steps { gap: 3mm; }
+    .intro .step-heading { margin-bottom: 1.5mm; }
+    .intro figure { padding: 2mm; }
+    .intro figure img,
+    .intro figure.portrait img { max-height: 50mm; }
+    .intro figcaption { margin-top: 1mm; }
+
+    .organize header { margin-bottom: 4mm; }
+    .organize .note { margin-bottom: 3mm; padding-top: 2mm; padding-bottom: 2mm; }
+    .organize .steps { gap: 3mm; }
+    .organize .step-heading { margin-bottom: 1.5mm; }
+    .organize figure { padding: 2mm; }
+    .organize figure img { max-height: 59mm; }
+    .organize figcaption { margin-top: 1mm; }
+
+    figcaption {
+      margin-top: 1.5mm;
+      color: var(--muted);
+      font-size: 7.8pt;
+      text-align: left;
+    }
+
+    code {
+      padding: .1em .35em;
+      border: 1px solid #d9deea;
+      border-radius: .35em;
+      background: #f6f7fa;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .92em;
+    }
+
+    .completion {
+      margin-bottom: 5mm;
+      padding: 5mm 6mm;
+      border: 1px solid #cdd8ff;
+      border-radius: 3mm;
+      background: linear-gradient(135deg, #eef2ff, #f6f0ff);
+    }
+
+    .completion h2 { margin-bottom: 1mm; }
+    .completion p { margin-bottom: 0; color: var(--muted); }
+
+    footer {
+      position: absolute;
+      right: 16mm;
+      bottom: 7mm;
+      left: 16mm;
+      display: flex;
+      justify-content: space-between;
+      color: #7b8496;
+      font-size: 7.5pt;
+    }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    @media print {
+      html { background: #fff; }
+      .page { margin: 0; box-shadow: none; }
+    }
+
+    @media screen and (max-width: 850px) {
+      .page { width: 100%; min-height: auto; margin: 0 0 12px; padding: 28px 22px 54px; }
+      header { align-items: flex-start; flex-direction: column; }
+      header .meta { text-align: left; }
+      footer { right: 22px; left: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="page intro">
+      <header>
+        <div>
+          <p class="eyebrow">User Guide</p>
+          <h1>cluster Sound Album<br>ユーザーマニュアル</h1>
+        </div>
+        <p class="meta">全13ステップ<br>アルバム作成から公開準備まで</p>
+      </header>
+      <p class="lead">音源とサムネイル画像からSound Pod用のアイテムを作成し、clusterへアップロードする手順を説明します。</p>
+      <aside class="note"><strong>事前準備：</strong> アルバム名、各曲の音源ファイル、曲名、各曲のサムネイル画像、アルバム全体のサムネイル画像を用意してください。</aside>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading"><span class="step-no">1</span><div><h2>画面全体を確認する</h2><p class="instruction">上から「アルバム情報」「曲データ」「再生設定」「STATUS」「CCKアクセストークン」の順に操作します。</p></div></div>
+          <figure class="portrait"><img src="01-whole-view.png" alt="cluster Sound Albumの画面全体"><figcaption>アプリのメイン画面。必要な項目を上から順に入力します。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading"><span class="step-no">2</span><div><h2>アルバムと曲の情報を入力して変換する</h2><p class="instruction">アルバム名と画像、各曲の音源・曲名・サムネイルを設定します。必要に応じて曲を追加して再生設定を調整し、<strong>「変換開始」</strong>をクリックします。</p></div></div>
+          <figure><img src="02-input-and-convert.png" alt="アルバムと3曲分の情報を入力した画面"><figcaption>曲順は上下矢印で変更できます。入力内容を確認してから変換を開始します。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>1 / 7</span></footer>
+    </section>
+
+    <section class="page">
+      <header><div><p class="eyebrow">Chapter 1</p><h1>アルバムを変換する</h1></div><p class="meta">アプリでの操作</p></header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading"><span class="step-no">3</span><div><h2>変換の進行状況を確認する</h2><p class="instruction">STATUS欄に「全曲を変換しています」と表示されます。処理が完了するまでアプリを終了しないでください。</p></div></div>
+          <figure><img src="03-convert-started.png" alt="全曲を変換していますと表示された画面"><figcaption>変換中は、処理中の曲番号と工程が表示されます。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading"><span class="step-no">4</span><div><h2>変換完了を確認する</h2><p class="instruction">「全曲の変換が完了しました」と表示され、各曲の容量とPod数が一覧になれば変換完了です。</p></div></div>
+          <figure><img src="04-convert-completed.png" alt="全曲の変換が完了した画面"><figcaption>変換結果を確認します。続けてclusterへアップロードするためのトークンを取得します。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>2 / 7</span></footer>
+    </section>
+
+    <section class="page">
+      <header><div><p class="eyebrow">Chapter 2</p><h1>アクセストークンを作成する</h1></div><p class="meta">cluster Webサイトでの操作</p></header>
+      <aside class="note"><strong>重要：</strong> アクセストークンはパスワードと同様に扱い、第三者へ共有しないでください。</aside>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading"><span class="step-no">5</span><div><h2>アクセストークン画面を開く</h2><p class="instruction">clusterのWebサイトへログインし、右上のプロフィールメニューから<strong>「アクセストークン」</strong>を選択します。</p></div></div>
+          <figure><img src="05-go-to-access-token-page.png" alt="clusterのプロフィールメニューからアクセストークンを選ぶ画面"><figcaption>アップロード先として使用するclusterアカウントでログインしてください。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading"><span class="step-no">6</span><div><h2>Creator Kitトークンを作成する</h2><p class="instruction">「アクセストークン」のCreator Kitトークン欄で<strong>「トークン作成」</strong>をクリックします。</p></div></div>
+          <figure><img src="06-create-creator-kit-token.png" alt="Creator Kitトークンの作成ボタン"><figcaption>REALITY連携トークンではなく、Creator Kitトークンを使用します。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>3 / 7</span></footer>
+    </section>
+
+    <section class="page">
+      <header><div><p class="eyebrow">Chapter 3</p><h1>clusterへアップロードする</h1></div><p class="meta">トークンは安全に管理</p></header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading"><span class="step-no">7</span><div><h2>トークンをコピーする</h2><p class="instruction">表示されたトークンのコピーボタンをクリックし、安全な場所へ一時的にコピーします。</p></div></div>
+          <figure><img src="07-copy-token.png" alt="作成されたCreator Kitトークンをコピーする画面"><figcaption>トークンは再表示されません。画面を閉じる前に必ずコピーしてください。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading"><span class="step-no">8</span><div><h2>トークンを貼り付けてアップロードする</h2><p class="instruction">アプリの「CCKアクセストークン」へ貼り付け、必要なアップロード設定を選択して<strong>「全曲をAlbumをclusterへアップロード」</strong>をクリックします。</p></div></div>
+          <figure><img src="08-paste-token-and-upload.png" alt="トークンを貼り付けて全曲をアップロードする画面"><figcaption>アップロード中もトークンを保持する場合のみ「アップロード後もトークンを保持」を選択します。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>4 / 7</span></footer>
+    </section>
+
+    <section class="page">
+      <header><div><p class="eyebrow">Chapter 3</p><h1>アップロードを完了する</h1></div><p class="meta">アプリでの操作</p></header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading"><span class="step-no">9</span><div><h2>アップロードの進行状況を確認する</h2><p class="instruction">STATUS欄に「clusterへアップロードしています」と表示されます。完了するまでアプリを終了しないでください。</p></div></div>
+          <figure><img src="09-upload-started.png" alt="clusterへアップロードしていますと表示された画面"><figcaption>処理中の曲番号、工程、各曲のPod数が表示されます。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading"><span class="step-no">10</span><div><h2>アップロード完了を確認する</h2><p class="instruction">「Albumのアップロードが完了しました」と表示されたら完了です。必要に応じて表示されたAlbum Item IDをコピーします。</p></div></div>
+          <figure><img src="10-upload-completed.png" alt="Albumのアップロードが完了した画面"><figcaption>完成したAlbum ItemのIDと、アーカイブ操作へのリンクが表示されます。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>5 / 7</span></footer>
+    </section>
+
+    <section class="page organize">
+      <header><div><p class="eyebrow">Chapter 4</p><h1>クラフトアイテムを整理する</h1></div><p class="meta">cluster Webサイトでの操作</p></header>
+      <aside class="note safe"><strong>ポイント：</strong> 番号付きの青いアイテムは再生データを分割して格納したものです。完成したアルバム本体と区別して整理します。</aside>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading"><span class="step-no">11</span><div><h2>自分のクラフトアイテムを表示する</h2><p class="instruction">clusterの「マイコンテンツ」→「クラフトアイテム」を開き、アップロードされたアイテム一式を確認します。</p></div></div>
+          <figure><img src="11-show-own-craft-items.png" alt="アップロード直後のクラフトアイテム一覧"><figcaption>アルバム本体、曲のアイテム、番号付きの分割アイテムが一覧に表示されます。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading"><span class="step-no">12</span><div><h2>番号付きの分割アイテムをアーカイブする</h2><p class="instruction">番号だけが表示された青い分割アイテムを選択し、アーカイブします。アルバム本体や曲名付きのアイテムは残してください。</p></div></div>
+          <figure><img src="12-archive-numbered-chunks.png" alt="番号付きの分割アイテムを選択した画面"><figcaption>誤ってアルバム本体や曲名付きのアイテムをアーカイブしないよう注意してください。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>6 / 7</span></footer>
+    </section>
+
+    <section class="page">
+      <header><div><p class="eyebrow">Completed</p><h1>利用準備を確認する</h1></div><p class="meta">マニュアル完了</p></header>
+      <div class="completion"><h2>Sound Albumの準備が完了しました</h2><p>アルバム本体と各曲のクラフトアイテムが残っていれば、ワールドで利用する準備は完了です。</p></div>
+      <article class="step">
+        <div class="step-heading"><span class="step-no">13</span><div><h2>使用するアイテムだけが残っていることを確認する</h2><p class="instruction">アーカイブ後に一覧を再表示し、アルバム本体と曲名付きアイテムが表示されていることを確認します。</p></div></div>
+        <figure class="hero"><img src="13-ready-to-use-items.png" alt="整理後の利用可能なクラフトアイテム一覧"><figcaption>画面例：アルバム本体と各曲のアイテムが利用可能な状態です。</figcaption></figure>
+      </article>
+      <footer><span>cluster Sound Album</span><span>7 / 7</span></footer>
+    </section>
+  </main>
+</body>
+</html>

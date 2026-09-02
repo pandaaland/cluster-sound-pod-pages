@@ -144,6 +144,9 @@
     .guide-section {
       margin-top: 40px;
     }
+    .guide-section + .guide-section {
+      margin-top: 30px;
+    }
     .section-heading {
       margin-bottom: 18px;
     }
@@ -164,6 +167,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
+    }
+    .guide-grid.single {
+      grid-template-columns: 1fr;
     }
     .guide-card {
       display: flex;
@@ -224,6 +230,16 @@
       border-color: var(--border-color);
       color: var(--text-muted);
       background: rgba(255, 255, 255, 0.05);
+    }
+    .guide-card.primary {
+      grid-column: 1 / -1;
+      border-color: rgba(99, 102, 241, 0.28);
+      background: linear-gradient(135deg, rgba(31, 38, 64, 0.95), rgba(26, 27, 48, 0.9));
+    }
+    .guide-card.primary .guide-icon {
+      border-color: rgba(129, 140, 248, 0.35);
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.13);
     }
     .coming-soon {
       display: inline-block;
@@ -298,6 +314,9 @@
       .guide-grid {
         grid-template-columns: 1fr;
       }
+      .guide-card.primary {
+        grid-column: auto;
+      }
       .contact-container {
         flex-direction: column;
         align-items: flex-start;
@@ -334,10 +353,10 @@
       </a>
     </div>
 
-    <section class="guide-section" aria-labelledby="guide-title">
+    <section class="guide-section" aria-labelledby="install-guide-title">
       <div class="section-heading">
-        <div class="section-kicker">Installation Guides</div>
-        <h2 class="section-title" id="guide-title">アプリのインストール手順</h2>
+        <div class="section-kicker">Step 1 - Installation</div>
+        <h2 class="section-title" id="install-guide-title">アプリをインストールする</h2>
       </div>
       <div class="guide-grid">
         <a href="./install-manual/macosx/index.html" class="guide-card">
@@ -356,6 +375,23 @@
             <span class="coming-soon">Coming Soon</span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="guide-section" aria-labelledby="user-guide-title">
+      <div class="section-heading">
+        <div class="section-kicker">Step 2 - Usage</div>
+        <h2 class="section-title" id="user-guide-title">アプリを利用する</h2>
+      </div>
+      <div class="guide-grid single">
+        <a href="./user-manual/index.html" class="guide-card primary">
+          <div class="guide-icon" aria-hidden="true">使</div>
+          <div class="guide-content">
+            <div class="guide-title">cluster Sound Album ユーザーマニュアル</div>
+            <div class="guide-desc">アルバムの変換、アクセストークンの取得、clusterへのアップロード、クラフトアイテムの整理までを案内します。</div>
+            <div class="guide-link">ユーザーマニュアルを開く →</div>
+          </div>
+        </a>
       </div>
     </section>
 

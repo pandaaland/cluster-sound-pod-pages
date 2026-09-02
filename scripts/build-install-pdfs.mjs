@@ -10,6 +10,10 @@ const documents = [
     source: 'install-manual/macosx/index.html',
     output: 'output/pdf/cluster-sound-album-macos-install-guide.pdf',
   },
+  {
+    source: 'user-manual/index.html',
+    output: 'output/pdf/cluster-sound-album-user-guide.pdf',
+  },
 ];
 
 function browserCandidates() {
