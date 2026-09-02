@@ -4,7 +4,8 @@
   "description": "GitHub Pages for cluster-sound-pod presentations and documentation",
   "scripts": {
     "dev": "browser-sync start --server --files \"**/*.html, **/*.css, **/*.js\" --port 3000 --no-open",
-    "serve": "browser-sync start --server --port 3000 --no-open"
+    "serve": "browser-sync start --server --port 3000 --no-open",
+    "build:pdf": "node scripts/build-install-pdfs.mjs"
   },
   "keywords": [
     "cluster",

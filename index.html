@@ -141,6 +141,102 @@
     .deck-card.cluster .deck-cta {
       color: var(--cluster-cyan);
     }
+    .guide-section {
+      margin-top: 40px;
+    }
+    .section-heading {
+      margin-bottom: 18px;
+    }
+    .section-kicker {
+      color: var(--cluster-cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .section-title {
+      margin-top: 5px;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+    .guide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .guide-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 118px;
+      padding: 22px 24px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      color: inherit;
+      background: var(--bg-card);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    a.guide-card:hover {
+      border-color: rgba(34, 211, 238, 0.45);
+      background: var(--bg-card-hover);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+      transform: translateY(-3px);
+    }
+    .guide-icon {
+      display: grid;
+      flex: 0 0 auto;
+      width: 50px;
+      height: 50px;
+      place-items: center;
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      border-radius: 14px;
+      color: var(--cluster-cyan);
+      background: rgba(34, 211, 238, 0.1);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+    .guide-content { min-width: 0; }
+    .guide-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .guide-desc {
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .guide-link {
+      margin-top: 8px;
+      color: var(--cluster-cyan);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .guide-card.disabled {
+      cursor: default;
+      opacity: 0.58;
+    }
+    .guide-card.disabled .guide-icon {
+      border-color: var(--border-color);
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .coming-soon {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
     .contact-container {
       margin-top: 40px;
       padding: 20px 24px;
@@ -199,6 +295,9 @@
       transform: translateY(-1px);
     }
     @media (max-width: 600px) {
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
       .contact-container {
         flex-direction: column;
         align-items: flex-start;
@@ -234,6 +333,31 @@
         <div class="deck-cta">スライドを開く →</div>
       </a>
     </div>
+
+    <section class="guide-section" aria-labelledby="guide-title">
+      <div class="section-heading">
+        <div class="section-kicker">Installation Guides</div>
+        <h2 class="section-title" id="guide-title">アプリのインストール手順</h2>
+      </div>
+      <div class="guide-grid">
+        <a href="./install-manual/macosx/index.html" class="guide-card">
+          <div class="guide-icon" aria-hidden="true">Mac</div>
+          <div class="guide-content">
+            <div class="guide-title">macOS版</div>
+            <div class="guide-desc">アプリのコピーから、初回起動時のセキュリティ許可までを案内します。</div>
+            <div class="guide-link">インストール手順を開く →</div>
+          </div>
+        </a>
+        <div class="guide-card disabled" aria-disabled="true">
+          <div class="guide-icon" aria-hidden="true">Win</div>
+          <div class="guide-content">
+            <div class="guide-title">Windows版</div>
+            <div class="guide-desc">Windows版アプリのインストール手順を掲載予定です。</div>
+            <span class="coming-soon">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Contact Section -->
     <div class="contact-container">

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cluster Sound Album - macOS版インストール手順書</title>
+  <style>
+    :root {
+      --ink: #152033;
+      --muted: #5c667a;
+      --line: #d9e0eb;
+      --paper: #fff;
+      --soft: #f4f7fb;
+      --blue: #4867f3;
+      --purple: #8c5de8;
+      --warn: #fff4d8;
+      --warn-line: #e6ae2f;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: #e8edf5; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.65;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      position: relative;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 10mm auto;
+      padding: 15mm 16mm 14mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 8px 30px rgb(26 39 68 / 12%);
+      page-break-after: always;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .page::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4mm;
+      content: "";
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8mm;
+      margin-bottom: 7mm;
+      padding-bottom: 4mm;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 1mm;
+      color: var(--blue);
+      font-size: 8pt;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 0;
+      font-size: 23pt;
+      line-height: 1.25;
+      letter-spacing: -.02em;
+    }
+
+    header .meta {
+      flex: 0 0 auto;
+      margin: 0;
+      color: var(--muted);
+      font-size: 8.5pt;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .lead {
+      margin: -1mm 0 7mm;
+      color: var(--muted);
+      font-size: 11pt;
+    }
+
+    .note {
+      margin-bottom: 7mm;
+      padding: 3.5mm 4mm;
+      border-left: 1.2mm solid var(--warn-line);
+      border-radius: 2mm;
+      background: var(--warn);
+      font-size: 9.2pt;
+    }
+
+    .steps {
+      display: grid;
+      gap: 6mm;
+    }
+
+    .step {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .step-heading {
+      display: grid;
+      grid-template-columns: 11mm 1fr;
+      align-items: start;
+      gap: 3mm;
+      margin-bottom: 3mm;
+    }
+
+    .step-no {
+      display: grid;
+      width: 10mm;
+      height: 10mm;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      font-size: 13pt;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: -.5mm 0 .5mm;
+      font-size: 15pt;
+      line-height: 1.4;
+    }
+
+    .instruction { margin: 0; color: var(--muted); }
+
+    figure {
+      margin: 0;
+      padding: 3mm;
+      border: 1px solid var(--line);
+      border-radius: 3mm;
+      background: var(--soft);
+      text-align: center;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      max-height: 77mm;
+      object-fit: contain;
+      margin: auto;
+      border-radius: 1.5mm;
+    }
+
+    figure.tall img { max-height: 83mm; }
+    figure.hero img { max-height: 166mm; }
+
+    .intro header { margin-bottom: 4mm; }
+    .intro .lead { margin-bottom: 4mm; }
+    .intro .note { margin-bottom: 4mm; padding-top: 2.5mm; padding-bottom: 2.5mm; }
+    .intro .steps { gap: 4mm; }
+    .intro .step-heading { margin-bottom: 2mm; }
+    .intro figure { padding: 2mm; }
+    .intro figure img { max-height: 54mm; }
+    .intro figcaption { margin-top: 1mm; }
+
+    figcaption {
+      margin-top: 2mm;
+      color: var(--muted);
+      font-size: 8pt;
+      text-align: left;
+    }
+
+    code {
+      padding: .1em .35em;
+      border: 1px solid #d9deea;
+      border-radius: .35em;
+      background: #f6f7fa;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .92em;
+    }
+
+    footer {
+      position: absolute;
+      right: 16mm;
+      bottom: 7mm;
+      left: 16mm;
+      display: flex;
+      justify-content: space-between;
+      color: #7b8496;
+      font-size: 7.5pt;
+    }
+
+    .done {
+      margin-bottom: 5mm;
+      padding: 5mm 6mm;
+      border: 1px solid #cdd8ff;
+      border-radius: 3mm;
+      background: linear-gradient(135deg, #eef2ff, #f6f0ff);
+    }
+
+    .done h2 { margin-bottom: 1mm; }
+    .done p { margin-bottom: 0; color: var(--muted); }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    @media print {
+      html { background: #fff; }
+      .page { margin: 0; box-shadow: none; }
+    }
+
+    @media screen and (max-width: 850px) {
+      .page { width: 100%; min-height: auto; margin: 0 0 12px; padding: 28px 22px 54px; }
+      header { align-items: flex-start; flex-direction: column; }
+      header .meta { text-align: left; }
+      footer { right: 22px; left: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="page intro">
+      <header>
+        <div>
+          <p class="eyebrow">Installation Guide</p>
+          <h1>cluster Sound Album<br>macOS版インストール手順書</h1>
+        </div>
+        <p class="meta">対象：macOS<br>全7ステップ</p>
+      </header>
+      <p class="lead">ダウンロードしたディスクイメージからアプリをインストールし、初回起動時のセキュリティ許可を行います。</p>
+      <aside class="note"><strong>ご確認ください：</strong> セキュリティ設定の変更時に、Macの管理者パスワードまたは管理者のTouch IDが必要です。</aside>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">1</span>
+            <div>
+              <h2>アプリをApplicationsへコピーする</h2>
+              <p class="instruction">ダウンロードしたディスクイメージ（DMG）を開き、<code>cluster-sound-album.app</code> を「Applications」フォルダへドラッグします。</p>
+            </div>
+          </div>
+          <figure>
+            <img src="01-open-disk-image.png" alt="cluster-sound-album.appをApplicationsフォルダへドラッグする画面">
+            <figcaption>アプリアイコンを右側の「Applications」へドラッグします。</figcaption>
+          </figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">2</span>
+            <div>
+              <h2>アプリを起動する</h2>
+              <p class="instruction">「アプリケーション」フォルダを開き、コピーした <code>cluster-sound-album.app</code> をダブルクリックします。</p>
+            </div>
+          </div>
+          <figure>
+            <img src="02-execute-app.png" alt="アプリケーションフォルダ内のcluster-sound-album.app">
+            <figcaption>Finderの「アプリケーション」からアプリを起動します。</figcaption>
+          </figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>1 / 4</span></footer>
+    </section>
+
+    <section class="page">
+      <header>
+        <div><p class="eyebrow">Security Permission</p><h1>セキュリティ警告を解除する</h1></div>
+        <p class="meta">初回起動時のみ</p>
+      </header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">3</span>
+            <div>
+              <h2>警告を閉じる</h2>
+              <p class="instruction">「“cluster-sound-album.app”は開いていません」と表示されたら、<strong>「完了」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure class="tall">
+            <img src="03-close-security-alert.png" alt="アプリを開けないことを示すmacOSのセキュリティ警告">
+            <figcaption>ここでは「ゴミ箱に入れる」を選択しないでください。</figcaption>
+          </figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">4</span>
+            <div>
+              <h2>システム設定から「このまま開く」を選ぶ</h2>
+              <p class="instruction">「システム設定」→「プライバシーとセキュリティ」を開き、セキュリティ欄に表示されたアプリの右側にある<strong>「このまま開く」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure>
+            <img src="04-open-blocked-app.png" alt="macOSのプライバシーとセキュリティ設定にあるこのまま開くボタン">
+            <figcaption>項目が見つからない場合は、画面を下へスクロールして「セキュリティ」欄を確認します。</figcaption>
+          </figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>2 / 4</span></footer>
+    </section>
+
+    <section class="page">
+      <header>
+        <div><p class="eyebrow">Security Permission</p><h1>アプリの実行を許可する</h1></div>
+        <p class="meta">初回起動時のみ</p>
+      </header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">5</span>
+            <div>
+              <h2>確認画面で「このまま開く」を選ぶ</h2>
+              <p class="instruction">アプリを開くか確認されたら、内容を確認して<strong>「このまま開く」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure class="tall">
+            <img src="05-continue-to-open.png" alt="アプリを開くか確認する画面のこのまま開くボタン">
+            <figcaption>提供元を確認できる場合にのみ操作を続けてください。</figcaption>
+          </figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">6</span>
+            <div>
+              <h2>管理者認証を行う</h2>
+              <p class="instruction">管理者のTouch IDで認証するか、<strong>「パスワードを使用…」</strong>をクリックして管理者パスワードを入力します。</p>
+            </div>
+          </div>
+          <figure class="tall">
+            <img src="06-accept-app.png" alt="管理者のTouch IDまたはパスワードを求める画面">
+            <figcaption>組織で管理されているMacでは、管理者へ認証を依頼してください。</figcaption>
+          </figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>3 / 4</span></footer>
+    </section>
+
+    <section class="page">
+      <header>
+        <div><p class="eyebrow">Completed</p><h1>起動を確認する</h1></div>
+        <p class="meta">インストール完了</p>
+      </header>
+      <div class="done">
+        <h2>これでインストールは完了です</h2>
+        <p>次回からは「アプリケーション」フォルダの <code>cluster-sound-album.app</code> をダブルクリックするだけで起動できます。</p>
+      </div>
+      <article class="step">
+        <div class="step-heading">
+          <span class="step-no">7</span>
+          <div>
+            <h2>アプリの画面が表示されることを確認する</h2>
+            <p class="instruction">「Sound Album」の画面が表示されたら、正常に起動しています。</p>
+          </div>
+        </div>
+        <figure class="hero">
+          <img src="07-app-started.png" alt="正常に起動したcluster Sound Albumの画面">
+          <figcaption>画面例：cluster Sound Albumのメイン画面</figcaption>
+        </figure>
+      </article>
+      <footer><span>cluster Sound Album</span><span>4 / 4</span></footer>
+    </section>
+  </main>
+</body>
+</html>
