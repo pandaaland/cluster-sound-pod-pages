@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cluster Sound Album - Windows版インストール手順書</title>
+  <style>
+    :root {
+      --ink: #152033;
+      --muted: #5c667a;
+      --line: #d9e0eb;
+      --paper: #fff;
+      --soft: #f4f7fb;
+      --blue: #4867f3;
+      --purple: #8c5de8;
+      --warn: #fff4d8;
+      --warn-line: #e6ae2f;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: #e8edf5; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.65;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      position: relative;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 10mm auto;
+      padding: 15mm 16mm 14mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 8px 30px rgb(26 39 68 / 12%);
+      page-break-after: always;
+    }
+
+    .page:last-child { page-break-after: auto; }
+
+    .page::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4mm;
+      content: "";
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8mm;
+      margin-bottom: 7mm;
+      padding-bottom: 4mm;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 1mm;
+      color: var(--blue);
+      font-size: 8pt;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 0;
+      font-size: 23pt;
+      line-height: 1.25;
+      letter-spacing: -.02em;
+    }
+
+    header .meta {
+      flex: 0 0 auto;
+      margin: 0;
+      color: var(--muted);
+      font-size: 8.5pt;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .lead {
+      margin: -1mm 0 7mm;
+      color: var(--muted);
+      font-size: 11pt;
+    }
+
+    .note {
+      margin-bottom: 7mm;
+      padding: 3.5mm 4mm;
+      border-left: 1.2mm solid var(--warn-line);
+      border-radius: 2mm;
+      background: var(--warn);
+      font-size: 9.2pt;
+    }
+
+    .steps {
+      display: grid;
+      gap: 6mm;
+    }
+
+    .step {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .step-heading {
+      display: grid;
+      grid-template-columns: 11mm 1fr;
+      align-items: start;
+      gap: 3mm;
+      margin-bottom: 3mm;
+    }
+
+    .step-no {
+      display: grid;
+      width: 10mm;
+      height: 10mm;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      font-size: 13pt;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: -.5mm 0 .5mm;
+      font-size: 15pt;
+      line-height: 1.4;
+    }
+
+    .instruction { margin: 0; color: var(--muted); }
+
+    figure {
+      margin: 0;
+      padding: 3mm;
+      border: 1px solid var(--line);
+      border-radius: 3mm;
+      background: var(--soft);
+      text-align: center;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      max-height: 77mm;
+      object-fit: contain;
+      margin: auto;
+      border-radius: 1.5mm;
+    }
+
+    figure.tall img { max-height: 83mm; }
+    figure.hero img { max-height: 166mm; }
+
+    .intro header { margin-bottom: 4mm; }
+    .intro .lead { margin-bottom: 4mm; }
+    .intro .note { margin-bottom: 4mm; padding-top: 2.5mm; padding-bottom: 2.5mm; }
+    .intro .steps { gap: 4mm; }
+    .intro .step-heading { margin-bottom: 2mm; }
+    .intro figure { padding: 2mm; }
+    .intro figure img { max-height: 54mm; }
+    .intro figcaption { margin-top: 1mm; }
+
+    .final-page header { margin-bottom: 4mm; }
+    .final-page .done { margin-bottom: 3mm; padding: 3mm 4mm; }
+    .final-page .steps { gap: 3mm; }
+    .final-page .step-heading { margin-bottom: 2mm; }
+    .final-page figure { padding: 2mm; }
+    .final-page figure img { max-height: 63mm; }
+    .final-page figcaption { margin-top: 1mm; }
+
+    figcaption {
+      margin-top: 2mm;
+      color: var(--muted);
+      font-size: 8pt;
+      text-align: left;
+    }
+
+    code {
+      padding: .1em .35em;
+      border: 1px solid #d9deea;
+      border-radius: .35em;
+      background: #f6f7fa;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .92em;
+    }
+
+    footer {
+      position: absolute;
+      right: 16mm;
+      bottom: 7mm;
+      left: 16mm;
+      display: flex;
+      justify-content: space-between;
+      color: #7b8496;
+      font-size: 7.5pt;
+    }
+
+    .done {
+      margin-bottom: 5mm;
+      padding: 5mm 6mm;
+      border: 1px solid #cdd8ff;
+      border-radius: 3mm;
+      background: linear-gradient(135deg, #eef2ff, #f6f0ff);
+    }
+
+    .done h2 { margin-bottom: 1mm; }
+    .done p { margin-bottom: 0; color: var(--muted); }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    @media print {
+      html { background: #fff; }
+      .page { margin: 0; box-shadow: none; }
+    }
+
+    @media screen and (max-width: 850px) {
+      .page { width: 100%; min-height: auto; margin: 0 0 12px; padding: 28px 22px 54px; }
+      header { align-items: flex-start; flex-direction: column; }
+      header .meta { text-align: left; }
+      footer { right: 22px; left: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="page intro">
+      <header>
+        <div>
+          <p class="eyebrow">Installation Guide</p>
+          <h1>cluster Sound Album<br>Windows版インストール手順書</h1>
+        </div>
+        <p class="meta">対象：Windows<br>全10ステップ</p>
+      </header>
+      <p class="lead">ダウンロードしたセットアップファイルを実行し、アプリのインストールと初回起動時の利用規約への同意を行います。</p>
+      <aside class="note"><strong>ご確認ください：</strong> 必ず正規の配布元からダウンロードしたセットアップファイルを使用してください。</aside>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">1</span>
+            <div>
+              <h2>セットアップファイルを開く</h2>
+              <p class="instruction">ダウンロードした <code>cluster-sound-album-（バージョン）-win32-x64-setup-unsigned.exe</code> をダブルクリックします。</p>
+            </div>
+          </div>
+          <figure>
+            <img src="01-open-download.png" alt="ダウンロードフォルダにあるWindows版セットアップファイル">
+            <figcaption>ブラウザのダウンロード一覧からセットアップファイルを開きます。</figcaption>
+          </figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">2</span>
+            <div>
+              <h2>警告の詳細を表示する</h2>
+              <p class="instruction">「WindowsによってPCが保護されました」と表示されたら、配布元を確認して<strong>「詳細情報」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure>
+            <img src="02-smartscreen-warning.png" alt="WindowsによってPCが保護されましたという警告画面">
+            <figcaption>「実行しない」ではなく、左側の「詳細情報」を選びます。</figcaption>
+          </figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>1 / 5</span></footer>
+    </section>
+
+    <section class="page">
+      <header>
+        <div><p class="eyebrow">Security Permission</p><h1>セットアップを実行する</h1></div>
+        <p class="meta">Windows SmartScreen</p>
+      </header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">3</span>
+            <div>
+              <h2>「実行」を選ぶ</h2>
+              <p class="instruction">アプリ名を確認し、正規の配布元から入手したファイルであることを確認して<strong>「実行」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure class="tall">
+            <img src="03-smartscreen-run.png" alt="Windows SmartScreenの実行ボタン">
+            <figcaption>ファイル名がダウンロードしたセットアップファイルと一致することを確認します。</figcaption>
+          </figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">4</span>
+            <div>
+              <h2>セットアップを開始する</h2>
+              <p class="instruction">セットアップ画面が表示されたら、内容を確認して<strong>「次へ」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure>
+            <img src="04-installer-welcome.png" alt="cluster Sound Albumセットアップの開始画面">
+            <figcaption>他のアプリを終了してから進めると、インストールを確実に行えます。</figcaption>
+          </figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>2 / 5</span></footer>
+    </section>
+
+    <section class="page">
+      <header>
+        <div><p class="eyebrow">Installation</p><h1>アプリをインストールする</h1></div>
+        <p class="meta">セットアップ</p>
+      </header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">5</span>
+            <div>
+              <h2>インストール先を確認する</h2>
+              <p class="instruction">通常は表示されたインストール先を変更せず、<strong>「インストール」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure class="tall">
+            <img src="05-install-location.png" alt="cluster Sound Albumのインストール先選択画面">
+            <figcaption>保存先を変更する場合は「参照」からフォルダを指定します。</figcaption>
+          </figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">6</span>
+            <div>
+              <h2>インストールの完了を待つ</h2>
+              <p class="instruction">進行状況が表示されます。完了画面に切り替わるまで、そのまま待ちます。</p>
+            </div>
+          </div>
+          <figure class="tall">
+            <img src="06-installing.png" alt="cluster Sound Albumをインストールしている画面">
+            <figcaption>インストール中はセットアップを終了しないでください。</figcaption>
+          </figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>3 / 5</span></footer>
+    </section>
+
+    <section class="page">
+      <header>
+        <div><p class="eyebrow">First Launch</p><h1>インストールを完了して起動する</h1></div>
+        <p class="meta">初回起動</p>
+      </header>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">7</span>
+            <div>
+              <h2>セットアップを完了する</h2>
+              <p class="instruction">「cluster Sound Albumを実行」のチェックを入れたまま、<strong>「完了」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure><img src="07-installer-complete.png" alt="cluster Sound Albumセットアップの完了画面"><figcaption>チェックを外した場合は、スタートメニューなどからアプリを起動します。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">8</span>
+            <div>
+              <h2>使用許諾契約書を確認する</h2>
+              <p class="instruction">初回起動時に表示されるソフトウェア使用許諾契約書を最後まで確認します。</p>
+            </div>
+          </div>
+          <figure><img src="08-license-agreement.png" alt="ソフトウェア使用許諾契約書の確認画面"><figcaption>内容を確認し、同意できる場合のみ次へ進みます。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>4 / 5</span></footer>
+    </section>
+
+    <section class="page final-page">
+      <header>
+        <div><p class="eyebrow">Completed</p><h1>利用を開始する</h1></div>
+        <p class="meta">セットアップ完了</p>
+      </header>
+      <div class="done"><h2>あと少しで準備完了です</h2><p>使用許諾契約書へ同意すると、cluster Sound Albumのメイン画面が開きます。</p></div>
+      <div class="steps">
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">9</span>
+            <div>
+              <h2>使用許諾契約書に同意する</h2>
+              <p class="instruction">内容に同意できる場合はチェックボックスを選択し、<strong>「同意して開始」</strong>をクリックします。</p>
+            </div>
+          </div>
+          <figure><img src="09-accept-license.png" alt="使用許諾契約書に同意して開始する画面"><figcaption>同意しない場合はアプリを利用できません。</figcaption></figure>
+        </article>
+        <article class="step">
+          <div class="step-heading">
+            <span class="step-no">10</span>
+            <div>
+              <h2>アプリの画面を確認する</h2>
+              <p class="instruction">「Sound Album」のメイン画面が表示されたら、インストールは完了です。</p>
+            </div>
+          </div>
+          <figure><img src="10-app-started.png" alt="正常に起動したcluster Sound Albumの画面"><figcaption>次回からはスタートメニューなどからcluster Sound Albumを起動できます。</figcaption></figure>
+        </article>
+      </div>
+      <footer><span>cluster Sound Album</span><span>5 / 5</span></footer>
+    </section>
+  </main>
+</body>
+</html>

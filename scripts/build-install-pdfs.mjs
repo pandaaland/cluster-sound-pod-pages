@@ -7,6 +7,10 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const documents = [
   {
+    source: 'install-manual/windows/index.html',
+    output: 'output/pdf/cluster-sound-album-windows-install-guide.pdf',
+  },
+  {
     source: 'install-manual/macosx/index.html',
     output: 'output/pdf/cluster-sound-album-macos-install-guide.pdf',
   },
